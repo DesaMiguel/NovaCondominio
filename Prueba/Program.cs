@@ -1,0 +1,163 @@
+ using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Prueba.Areas.Identity.Data;
+using Prueba.Core;
+using Prueba.Core.Repositories;
+using Prueba.Context;
+using Prueba.Repositories;
+using Prueba.Services;
+using Prueba.Utils;
+using System.Text.Json.Serialization;
+using QuestPDF.Infrastructure;
+using Microsoft.Extensions.Options;
+
+var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
+
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+    options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 100,
+            maxRetryDelay: TimeSpan.FromSeconds(50),
+            errorNumbersToAdd: null);
+    }
+    ));
+builder.Services.AddDbContext<NuevaAppContext>(options =>
+    options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 100,
+            maxRetryDelay: TimeSpan.FromSeconds(50),
+            errorNumbersToAdd: null);
+    }
+    ));
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDBContext>();
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(5));
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<ExchangeData>(builder.Configuration.GetSection("ExchangeRate"));
+builder.Services.Configure<CronJobSettings>(
+    builder.Configuration.GetSection("ExternalApi:ScheduleCronJobs"));
+
+
+builder.Services.AddHttpClient("ApiExterna", (serviceProvider, client) =>
+{
+    var apiSettings = serviceProvider.GetRequiredService<IOptions<ExchangeData>>().Value;
+
+    client.BaseAddress = new Uri(apiSettings.BaseUrl);
+    //client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiSettings.ApiKey}");
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
+builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+// culture
+//builder.Services.Configure<RequestLocalizationOptions>(options =>
+//{
+//    var supportedCultures = new[] { "en-US" };
+//    options.SetDefaultCulture(supportedCultures[0])
+//        .AddSupportedCultures(supportedCultures)
+//        .AddSupportedUICultures(supportedCultures);
+//});
+
+#region Authorization
+
+AddAuthorizationPolicies();
+
+#endregion
+AddScoped();
+
+AddTransient();
+
+AddHosted();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+//app.UseRequestLocalization(new RequestLocalizationOptions
+//{
+//    ApplyCurrentCultureToResponseHeaders = true
+//});
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
+QuestPDF.Settings.License = LicenseType.Community;
+app.Run();
+
+void AddAuthorizationPolicies()
+{
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("EmployeeOnly", policy => policy.RequireClaim("EmployeeNumber"));
+    });
+
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy(Constants.Policies.RequirePropietario, policy => policy.RequireRole(Constants.Roles.Propietario));
+        options.AddPolicy(Constants.Policies.RequireSuperAdmin, policy => policy.RequireRole(Constants.Roles.SuperAdmin));
+        options.AddPolicy(Constants.Policies.RequireAdmin, policy => policy.RequireRole(Constants.Roles.Administrador));
+        options.AddPolicy(Constants.Policies.RequireInquilino, policy => policy.RequireRole(Constants.Roles.Inquilino));
+        options.AddPolicy("RequirePropietarioOrInquilino", policy =>
+            policy.RequireAssertion(context =>
+                context.User.IsInRole(Constants.Roles.Propietario) || context.User.IsInRole(Constants.Roles.Inquilino)));
+    });
+}
+
+void AddScoped()
+{
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+    builder.Services.AddScoped<IFiltroFechaRepository, FiltroFechaRepository>();
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+    builder.Services.AddScoped<IEmailService, EmailService>();
+    builder.Services.AddScoped<IPDFServices, PDFServices>();
+    builder.Services.AddScoped<IPrintServices, PrintServices>();
+    builder.Services.AddScoped<IExchangeApiService, ExchangeApiService>();
+}
+
+void AddTransient()
+{
+    builder.Services.AddTransient<IManageExcel, ManageExcel>();
+    builder.Services.AddTransient<IRelacionGastoRepository, RelacionGastoRepository>();
+    builder.Services.AddTransient<IReportesRepository, ReportesRepository>();
+    builder.Services.AddTransient<IPagosEmitidosRepository, PagosEmitidosRepository>();
+    builder.Services.AddTransient<IPagosRecibidosRepository, PagosRecibidosRepository>();
+    builder.Services.AddTransient<ILibroDiarioRepository, LibroDiarioRepository>();
+    builder.Services.AddTransient<ICuentasContablesRepository, CuentasContablesRepository>();    
+    builder.Services.AddTransient<ICondominioRepository, CondominioRepository>();    
+    builder.Services.AddTransient<IMonedaRepository, MonedaRepository>();
+    builder.Services.AddTransient<IPdfReportesServices, PdfReportesServices>();
+    builder.Services.AddTransient<IExcelServices, ExcelServices>();
+
+}
+
+void AddHosted()
+{
+    builder.Services.AddHostedService<TasaBackgroundService>();
+}
+
