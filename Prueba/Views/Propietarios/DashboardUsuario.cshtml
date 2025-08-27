@@ -4,9 +4,8 @@
 
 @{
     ViewData["Title"] = "Dashboard";
+}
 
-}
-}
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <!-- Page Heading -->
@@ -32,7 +31,10 @@
                                 Condominio
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @Model.Propiedades.First().IdCondominioNavigation.Nombre
+                                @if (Model.Propiedades != null && Model.Propiedades.Any())
+                                {
+                                    @Model.Propiedades.First().IdCondominioNavigation.Nombre
+                                }
                             </div>
                         </div>
                         <div class="col-auto">
@@ -54,11 +56,11 @@
                                 Oficinas
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @if (Model.Propiedades.Any())
+                                @if (Model.Propiedades != null && Model.Propiedades.Any())
                                 {
                                     foreach (var item in Model.Propiedades)
                                     {
-                                        <span>@item.Codigo</span>
+                                        <span>@item.Codigo </span>
                                     }
                                 }
                             </div>
@@ -131,66 +133,66 @@
                 </div>
             </div>
         </div>
-        @if (Model.Propiedades != null && Model.Propiedades.Any())
+    </div>
+
+    @if (Model.Propiedades != null && Model.Propiedades.Any())
+    {
+        foreach (var propiedad in Model.Propiedades)
         {
-            foreach (var propiedad in Model.Propiedades)
-            {
-                var recibosPendientes = propiedad.ReciboCobros.Where(c => !c.Pagado).OrderBy(c => c.Fecha).ToList();
-
-                <!-- Content Row -->
-
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card shadow mb-4 bg-content-bg">
-                            <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">
-                                    Recibos pendientes @propiedad.Codigo
-                                </h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle"
-                                       href="#"
-                                       role="button"
-                                       id="dropdownMenuLink"
-                                       data-toggle="dropdown"
-                                       aria-haspopup="true"
-                                       aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered form"
-                                                   id="dataTable"
-                                                   width="100%"
-                                                   cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Fecha de Emisión</th>
-                                                        <th>Mes</th>
-                                                        <th>Monto</th>
-                                                        <th>Abonado</th>
-                                                        <th>total a Pagar</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-
+            var recibosPendientes = propiedad.ReciboCobros.Where(c => !c.Pagado).OrderBy(c => c.Fecha).ToList();
+            <!-- Content Row -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12">
+                    <div class="card shadow mb-4 bg-content-bg">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                Recibos pendientes @propiedad.Codigo
+                            </h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   id="dropdownMenuLink"
+                                   data-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                     aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Dropdown Header:</div>
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered form"
+                                       id="dataTable"
+                                       width="100%"
+                                       cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha de Emisión</th>
+                                            <th>Mes</th>
+                                            <th>Monto</th>
+                                            <th>Abonado</th>
+                                            <th>total a Pagar</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         @if (recibosPendientes.Any())
                                         {
                                             foreach (var recibo in recibosPendientes)
                                             {
                                                 <tr class="tr_s">
-                                                    <td>@recibo.Mes</td>
                                                     <td>@recibo.Fecha.ToString("dd/MM/yyyy")</td>
+                                                    <td>@recibo.Mes</td>
                                                     <td>@recibo.Monto.ToString("N")</td>
                                                     <td>@recibo.Abonado</td>
                                                     <td>@recibo.TotalPagar.ToString("N")</td>
@@ -201,12 +203,7 @@
                                         else
                                         {
                                             <tr class="tr_s">
-                                                <td>No</td>
-                                                <td>existen</td>
-                                                <td>recibos</td>
-                                                <td>pendientes</td>
-                                                <td></td>
-                                                <td></td>
+                                                <td colspan="6" class="text-center">No existen recibos pendientes</td>
                                             </tr>
                                         }
                                     </tbody>
