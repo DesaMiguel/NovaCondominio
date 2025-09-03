@@ -53,6 +53,9 @@
                                         @Html.DisplayNameFor(model => model.Saldo)
                                     </th>
                                     <th>
+                                        Monto Disponible
+                                    </th>
+                                    <th>
                                         @Html.DisplayNameFor(model => model.Detalle)
                                     </th>
                                     <th>
@@ -75,6 +78,9 @@
                                             @Html.DisplayFor(modelItem => item.Saldo)
                                         </td>
                                         <td>
+                                            @(item.Saldo - (item.MontoUtilizado != null ? (decimal)item.MontoUtilizado : 0))
+                                        </td>
+                                        <td>
                                             @Html.DisplayFor(modelItem => item.Detalle)
                                         </td>
                                         <td>
@@ -83,9 +89,10 @@
                                         @if (item.Activo)
                                         {
                                             <td>
-                                                <a asp-action="Edit" asp-route-id="@item.IdAnticipo">Edit</a> |
-                                                <a asp-action="Details" asp-route-id="@item.IdAnticipo">Details</a> |
-                                                <a asp-action="Delete" asp-route-id="@item.IdAnticipo">Delete</a>
+                                                <a asp-action="Edit" asp-route-id="@item.IdAnticipo">Editar</a> |
+                                                <a asp-action="Details" asp-route-id="@item.IdAnticipo">Detalles</a> |
+                                                <a asp-action="Delete" asp-route-id="@item.IdAnticipo">Eliminar</a> |
+                                                <a asp-action="PdfAnticipo" asp-route-id="@item.IdAnticipo">PDF</a>
                                             </td>
                                         }
                                         else

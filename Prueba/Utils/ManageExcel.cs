@@ -9,7 +9,6 @@ using Prueba.Models;
 using EFCore.BulkExtensions;
 using Prueba.Areas.Identity.Data;
 
-
 namespace Prueba.Utils
 {
     public interface IManageExcel

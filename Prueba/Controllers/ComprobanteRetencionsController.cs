@@ -156,36 +156,43 @@ namespace Prueba.Controllers
             {
                 return NotFound();
             }
+            ModelState.Remove("IdFacturaNavigation");
+            ModelState.Remove("IdProveedorNavigation");
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // validar num de control o num de facturas no repetidos
-                    var existNumComp = await _context.ComprobanteRetencions.Where(c => c.NumCompRet == comprobanteRetencion.NumCompRet).ToListAsync();
+                    //// validar num de control o num de facturas no repetidos
+                    //var existNumComp = await _context.ComprobanteRetencions.Where(c => c.NumCompRet == comprobanteRetencion.NumCompRet).ToListAsync();
 
-                    if (existNumComp.Any())
-                    {
-                        var mensaje = existNumComp.Any() ? "Existe el Nr. de Comprobante: " + comprobanteRetencion.NumCompRet : "";
-                        ViewBag.FormaPago = "fallido";
-                        ViewBag.Mensaje = mensaje;
+                    //if (existNumComp.Any())
+                    //{
+                    //    var mensaje = existNumComp.Any() ? "Existe el Nr. de Comprobante: " + comprobanteRetencion.NumCompRet : "";
+                    //    ViewBag.FormaPago = "fallido";
+                    //    ViewBag.Mensaje = mensaje;
 
-                        ViewData["IdFactura"] = new SelectList(_context.Facturas, "IdFactura", "NumFactura", comprobanteRetencion.IdFactura);
-                        ViewData["IdProveedor"] = new SelectList(_context.Proveedors, "IdProveedor", "Nombre", comprobanteRetencion.IdProveedor);
+                    //    ViewData["IdFactura"] = new SelectList(_context.Facturas, "IdFactura", "NumFactura", comprobanteRetencion.IdFactura);
+                    //    ViewData["IdProveedor"] = new SelectList(_context.Proveedors, "IdProveedor", "Nombre", comprobanteRetencion.IdProveedor);
 
-                        return View(comprobanteRetencion);
+                    //    return View(comprobanteRetencion);
 
-                    }
-                    else if (comprobanteRetencion.NumCompRet.Length != 14)
-                    {
-                        ViewBag.FormaPago = "fallido";
-                        ViewBag.Mensaje = "El Nr. de Comprobante debe tener 14 carácteres";
+                    //}
+                    //else if (comprobanteRetencion.NumCompRet.Length != 14)
+                    //{
+                    //    ViewBag.FormaPago = "fallido";
+                    //    ViewBag.Mensaje = "El Nr. de Comprobante debe tener 14 carácteres";
 
-                        ViewData["IdFactura"] = new SelectList(_context.Facturas, "IdFactura", "NumFactura", comprobanteRetencion.IdFactura);
-                        ViewData["IdProveedor"] = new SelectList(_context.Proveedors, "IdProveedor", "Nombre", comprobanteRetencion.IdProveedor);
+                    //    ViewData["IdFactura"] = new SelectList(_context.Facturas, "IdFactura", "NumFactura", comprobanteRetencion.IdFactura);
+                    //    ViewData["IdProveedor"] = new SelectList(_context.Proveedors, "IdProveedor", "Nombre", comprobanteRetencion.IdProveedor);
 
-                        return View(comprobanteRetencion);
-                    }
+                    //    return View(comprobanteRetencion);
+                    //}
+
+                    var factura = await _context.Facturas.FindAsync(comprobanteRetencion.IdFactura);
+                    var monto = factura!.Subtotal * comprobanteRetencion.Retencion / 100;
+                    comprobanteRetencion.ValorRetencion = monto;
+                    comprobanteRetencion.TotalImpuesto = monto;
 
                     _context.Update(comprobanteRetencion);
                     await _context.SaveChangesAsync();

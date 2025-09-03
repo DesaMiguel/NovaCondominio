@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Prueba.Models;
 
@@ -30,6 +31,8 @@ public partial class ComprobanteRetencion
     public decimal TotalFactura { get; set; }
 
     public decimal BaseImponible { get; set; }
+
+    [Display(Name = "Factura")]
 
     public virtual Factura IdFacturaNavigation { get; set; } = null!;
 

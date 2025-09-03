@@ -1,4 +1,10 @@
-﻿
+﻿@using Prueba.Repositories
+@inject IMonedaRepository repoMoneda
+
+@{
+    var tasaActual = repoMoneda.TasaActualMonedaPrincipal();
+}
+
 <!DOCTYPE html>
 <html class="wide wow-animation" lang="en">
 <head>
@@ -143,12 +149,6 @@
                         <span>Historial</span>
                     </a>
                 </li>
-
-
-
-
-
-
 
                 <!-- Reservaciones -->
                 @*<li class="nav-item">
@@ -384,6 +384,9 @@
                             href="#">Leer Más Mensajes</a>
                             </div>
                             </li>*@
+                            <div class="nav-item navbar-text mt-3">
+                                Tasa $: @tasaActual
+                            </div>
 
                             <div class="topbar-divider d-none d-sm-block"></div>
 

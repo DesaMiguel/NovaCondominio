@@ -25,9 +25,9 @@ public partial class ReciboCobro
 
     public decimal ValorDolar { get; set; }
 
-    public string SimboloMoneda { get; set; } = null!;
+    public string SimboloMoneda { get; set; } = string.Empty;
 
-    public string SimboloRef { get; set; } = null!;
+    public string SimboloRef { get; set; } = string.Empty;
 
     public decimal MontoMora { get; set; }
 
@@ -35,7 +35,7 @@ public partial class ReciboCobro
 
     public decimal Acumulado { get; set; }
 
-    public string Mes { get; set; } = null!;
+    public string Mes { get; set; } = string.Empty;
 
     public bool ReciboActual { get; set; }
 
@@ -44,6 +44,8 @@ public partial class ReciboCobro
     public decimal? Diferencial { get; set; }
 
     public decimal? MontoRefTotalPagar { get; set; }
+
+    public decimal? AbonadoRef { get; set; }
 
     public virtual Propiedad IdPropiedadNavigation { get; set; } = null!;
 

@@ -9,8 +9,6 @@ using Prueba.ViewModels;
 
 namespace Prueba.Controllers
 {
-    [Authorize(Policy = "RequireAdmin")]
-
     public class UserController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

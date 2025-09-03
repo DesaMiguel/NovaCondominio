@@ -140,11 +140,7 @@ namespace Prueba.Areas.Identity.Pages.Account
 
                         TempData["idUserLog"] = user.Id;
 
-                        //}
-                        //if (roles.FirstOrDefault() == "Propietario")
-                        //{
 
-                        //}
                         switch (roles.FirstOrDefault())
                         {
                             case "Propietario":

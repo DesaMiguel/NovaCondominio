@@ -28,7 +28,6 @@ namespace Prueba.Areas.Identity.Pages.Account
         private readonly NuevaAppContext _context;
         private readonly IEmailService _servicesEmail;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
 
 
         public ForgotPasswordModel(NuevaAppContext context,
@@ -39,7 +38,6 @@ namespace Prueba.Areas.Identity.Pages.Account
             _context = context;
             _servicesEmail = servicesEmail;
             _userManager = userManager;
-            _emailSender = emailSender;
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Prueba.Models;
 
@@ -13,7 +14,7 @@ public partial class Anticipo
 
     public decimal Saldo { get; set; }
 
-    public string Detalle { get; set; } = null!;
+    public string Detalle { get; set; } = string.Empty;
 
     public int IdProveedor { get; set; }
 
@@ -21,7 +22,11 @@ public partial class Anticipo
 
     public int IdCodCuenta { get; set; }
 
+    public decimal? MontoUtilizado { get; set; }
+
     public virtual CodigoCuentasGlobal IdCodCuentaNavigation { get; set; } = null!;
+
+    [Display(Name = "Proveedor")]
 
     public virtual Proveedor IdProveedorNavigation { get; set; } = null!;
 
