@@ -21,7 +21,7 @@ namespace Prueba.Services
 {
     public interface IEmailService
     {
-        void SendEmail(RegisterConfirm request);
+        void SendEmail(Models.RegisterConfirm request);
         string RectificarPago(string EmailFrom, List<string> EmailTo, string password, PagoRecibido pago, ReferenciasPr referencia);
         void ConfirmacionPagoCuota(String EmailFrom, String EmailTo, CuotasEspeciale cuotasEspeciale, ReciboCuota reciboCobro, PagoRecibido pagoRecibido, String password);
         void RectificarPagoCuotaEspecial(String EmailFrom, String EmailTo, CuotasEspeciale cuotasEspeciale, PagoRecibido pago, String password);
@@ -45,7 +45,7 @@ namespace Prueba.Services
             _config = config;
             _context = context;
         }
-        public void SendEmail(RegisterConfirm request)
+        public void SendEmail(Models.RegisterConfirm request)
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUsername").Value));
