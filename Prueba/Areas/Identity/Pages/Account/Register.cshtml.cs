@@ -165,7 +165,7 @@ namespace Prueba.Areas.Identity.Pages.Account
                     else
                     {
                         //await _signInManager.SignInAsync(user, isPersistent: false);
-                        var correo = new RegisterConfirm
+                        var correo = new Models.RegisterConfirm
                         {
                             To = Input.Email,
                             Subject = "Registro Condominio Password Technology C.A.",
