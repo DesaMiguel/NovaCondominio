@@ -1191,6 +1191,7 @@ $('.nav-tabs-selector').on('change', function (e) {
 
 
 var ShowPasswordToggle = document.querySelector("[type='password']");
+if (ShowPasswordToggle)
 ShowPasswordToggle.onclick = function () {
 	document
 		.querySelector("[type='password']")

@@ -52,7 +52,7 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>
+                                        <td data-order="@item.IdPagoNavigation.Fecha.ToString("yyyyMMddHHmmss")">
                                             @Html.DisplayFor(modelItem => item.IdPagoNavigation.Fecha)
                                         </td>
                                         <td>
