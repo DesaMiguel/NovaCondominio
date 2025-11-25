@@ -10,6 +10,8 @@ using Prueba.Utils;
 using System.Text.Json.Serialization;
 using QuestPDF.Infrastructure;
 using Microsoft.Extensions.Options;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
@@ -38,6 +40,29 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDBContext>();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(5));
+
+var supportedCultures = new[] {
+    /*new CultureInfo("es-ES"),
+    new CultureInfo("es-VE"),
+    new CultureInfo("es-MX"),
+    new CultureInfo("es-US"),
+    new CultureInfo("es-CO"),*/
+    new CultureInfo("en-US"),
+};
+var defaultCulture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(defaultCulture);
+    options.SupportedCultures= supportedCultures;
+    options.SupportedUICultures= supportedCultures;
+
+    options.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider());
+}
+);
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -80,6 +105,7 @@ AddTransient();
 AddHosted();
 
 var app = builder.Build();
+app.UseRequestLocalization();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

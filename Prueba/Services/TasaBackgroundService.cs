@@ -43,8 +43,8 @@ namespace Prueba.Services
                 throw new InvalidOperationException("Configuración de CronJobs no encontrada");
             }
 
-            _schedule1 = CrontabSchedule.Parse(cronSettings.TasaJob1 ?? "0 7 * * *"); 
-            _schedule2 = CrontabSchedule.Parse(cronSettings.TasaJob2 ?? "0 16 * * *");
+            _schedule1 = CrontabSchedule.Parse(cronSettings.TasaJob1 ?? "0 */4 * * *"); 
+            _schedule2 = CrontabSchedule.Parse(cronSettings.TasaJob2 ?? "0 17 * * *");
             _nextRun1 = _schedule1.GetNextOccurrence(DateTime.UtcNow);
             _nextRun2 = _schedule2.GetNextOccurrence(DateTime.UtcNow);
         }

@@ -5,9 +5,11 @@
 
 $(document).ready(function () {
     $('form').on('submit', function () {
-        var boton = $(this).find('button[type="submit"]');
-        if (boton.length) {
-            desactivarBoton(boton[0]);
+        if (this.checkValidity()) {
+            var boton = $(this).find('button[type="submit"]');
+            if (boton.length) {
+                desactivarBoton(boton[0]);
+            }
         }
     });
 });

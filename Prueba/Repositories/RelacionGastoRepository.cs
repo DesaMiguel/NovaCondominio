@@ -276,16 +276,17 @@ namespace Prueba.Repositories
                                        where (t.Fecha.Month == (DateTime.Today.Month - 1) && t.Fecha.Year == DateTime.Today.Year) ||
                                              (t.Fecha.Month == 12 && DateTime.Today.Month == 1 && t.Fecha.Year == DateTime.Today.Year - 1) ||
                                              (t.Fecha.Month == DateTime.Today.Month && t.Fecha.Year == DateTime.Today.Year)
+                                       //where t.IdPropiedad == null
                                        where t.Activo != null && (bool)t.Activo
                                        select t).ToListAsync();
 
             var transaccionesInd = await (from t in _context.Transaccions
                                           join cc in _context.CodigoCuentasGlobals
                                           on t.IdCodCuenta equals cc.IdCodCuenta
+                                          where cc.IdCondominio == id
                                           where (t.Fecha.Month == (DateTime.Today.Month - 1) && t.Fecha.Year == DateTime.Today.Year) ||
                                                 (t.Fecha.Month == 12 && DateTime.Today.Month == 1 && t.Fecha.Year == DateTime.Today.Year - 1) ||
                                                 (t.Fecha.Month == DateTime.Today.Month && t.Fecha.Year == DateTime.Today.Year)
-                                          where cc.IdCondominio == id
                                           where t.IdPropiedad != null
                                           where t.Activo != null && (bool)t.Activo
                                           select t).ToListAsync();

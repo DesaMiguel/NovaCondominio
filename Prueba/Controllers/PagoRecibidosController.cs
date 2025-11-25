@@ -272,10 +272,10 @@ namespace Prueba.Controllers
                         {
                             Text = recibo.Mes + " " + (recibo.ReciboActual ? 
                             ((recibo.Monto - recibo.Abonado)/ recibo.ValorDolar) : 
-                            (recibo.TotalPagar/ recibo.ValorDolar)).ToString("N") + "$" 
+                            (recibo.TotalPagar/ recibo.ValorDolar)).ToString("N2") + "$" 
                             + " - " + (recibo.ReciboActual ?
                             (((recibo.Monto - recibo.Abonado) / recibo.ValorDolar) * _tasaActual) :
-                            ((recibo.TotalPagar / recibo.ValorDolar) * _tasaActual)).ToString("N") + "Bs",
+                            ((recibo.TotalPagar / recibo.ValorDolar) * _tasaActual)).ToString("N2") + "Bs",
                             Value = recibo.IdReciboCobro.ToString(),
                             Selected = false,
                         }).ToList();
@@ -368,7 +368,7 @@ namespace Prueba.Controllers
                 int idCondominio = Convert.ToInt32(TempData.Peek("idCondominio").ToString());
 
                 modelo.IdCondominio = idCondominio;
-
+                
                 var resultado = await _repoPagosRecibidos.RegistrarPagoPropietarioAdmin(modelo);
 
                 // cargar comprobante si fue exitoso
@@ -940,7 +940,7 @@ namespace Prueba.Controllers
             var pagoPropiedad = await _context.PagoPropiedads
                 .Include(c => c.IdPropiedadNavigation)
                 .Include(c => c.IdPagoNavigation)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(c=>c.IdPagoPropiedad==id);
 
             if (pagoPropiedad == null)
             {

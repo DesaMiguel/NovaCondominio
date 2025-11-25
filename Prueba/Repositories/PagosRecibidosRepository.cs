@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Org.BouncyCastle.Crypto.Engines;
@@ -38,7 +40,7 @@ namespace Prueba.Repositories
             _repoMoneda = repoMoneda;
             _repoCuentas = repoCuentas;
             _context = context;
-            _tasaActual = _repoMoneda.TasaActualMonedaPrincipal();
+            _tasaActual = Math.Round(_repoMoneda.TasaActualMonedaPrincipal(), 2);
         }
 
         public async Task<IndexPagoFacturaEmitidaVM> GetPagosFacturasEmitidas(int id)
@@ -132,9 +134,9 @@ namespace Prueba.Repositories
                 .Where(c => c.IdFactura == factura.IdFacturaEmitida)
                 .FirstOrDefaultAsync();
 
-            if (itemLibroVenta != null && 
-                cliente != null && 
-                factura != null && 
+            if (itemLibroVenta != null &&
+                cliente != null &&
+                factura != null &&
                 itemCuentaCobrar != null)
             {
                 if (modelo.Pagoforma == FormaPago.NotaCredito)
@@ -1027,7 +1029,7 @@ namespace Prueba.Repositories
                     pago.FormaPago = true;
                     pago.SimboloMoneda = moneda.First().Simbolo;
                     //pago.ValorDolar = monedaPrincipal.First().ValorDolar;
-                   // pago.MontoRef = montoReferencia;
+                    // pago.MontoRef = montoReferencia;
                     pago.SimboloRef = "$";
 
                     // registrar cobro en transito
@@ -1526,7 +1528,7 @@ namespace Prueba.Repositories
                             Monto = modelo.Monto,
                             Activo = true,
                             MontoRef = modelo.MontoRef,
-                            ValorDolar = modelo.ValorDolar                         
+                            ValorDolar = modelo.ValorDolar
                         };
 
                         // validar num referencia repetido
@@ -1595,46 +1597,40 @@ namespace Prueba.Repositories
 
                                 #region PAGO RECIBIENDO CUALQUIER MONTO
                                 // PROCESO DE CONFIRMAR PAGO
-                                var montoPago = modelo.Monto; // auxiliar para recorrer los recibos con el monto del pago                         
+                                var montoPago = modelo.Monto; // auxiliar para recorrer los recibos con el monto del pago
+                                var montoPagoRef = Math.Round(montoPago / modelo.ValorDolar, 2);
 
                                 if (recibos != null && recibos.Any())
                                 {
                                     foreach (var recibo in recibos)
                                     {
-                                        
-                                        decimal pendientePagoRef = recibo.ReciboActual ? recibo.MontoRef - (recibo.Abonado/recibo.ValorDolar) : (recibo.TotalPagar/recibo.ValorDolar);
-                                        decimal pendientePago = pendientePagoRef * _tasaActual;
+                                        decimal pendientePagoRef = Math.Round(recibo.ReciboActual ? recibo.MontoRef - (recibo.Abonado / recibo.ValorDolar) : (recibo.TotalPagar / recibo.ValorDolar), 2);
+                                        decimal pendientePago = Math.Round(pendientePagoRef * modelo.ValorDolar, 2);
 
-                                        if (pendientePago != 0 && pendientePago > montoPago)
+                                        if (/*pendientePago != 0 &&*/ pendientePagoRef > montoPagoRef)
                                         {
-                                            recibo.Abonado += montoPago;
-                                            montoPago = 0;
+                                            recibo.AbonadoRef += montoPagoRef;
+                                            montoPagoRef = 0;
                                         }
-                                        else if (pendientePago != 0 && pendientePago < montoPago)
+                                        else if (/*pendientePago != 0 &&*/ pendientePagoRef < montoPagoRef)
                                         {
-                                            recibo.Abonado += pendientePago;
+                                            recibo.AbonadoRef += pendientePagoRef;
                                             recibo.Pagado = true;
-                                            montoPago -= pendientePago;
-
+                                            montoPagoRef -= pendientePagoRef;
                                         }
-                                        else if (pendientePago != 0 && pendientePago == montoPago)
+                                        else if (/*pendientePago != 0 && */ pendientePagoRef == montoPagoRef)
                                         {
-                                            recibo.Abonado += montoPago;
+                                            recibo.AbonadoRef += montoPagoRef;
                                             recibo.Pagado = true;
-                                            montoPago = 0;
+                                            montoPagoRef = 0;
                                         }
 
-                                        var pagoRecibo = new PagosRecibo()
-                                        {
-                                            IdPago = pago.IdPagoRecibido,
-                                            IdRecibo = recibo.IdReciboCobro
-                                        };
-
-                                        recibo.TotalPagar = recibo.ReciboActual ? recibo.Monto - recibo.Abonado : recibo.Monto + recibo.MontoMora + recibo.MontoIndexacion - recibo.Abonado;
-                                        recibo.TotalPagar = recibo.TotalPagar < 0 ? 0 : recibo.TotalPagar;
+                                        recibo.Abonado = Math.Round((recibo.AbonadoRef ?? 0) * recibo.ValorDolar, 2);
+                                        recibo.MontoRefTotalPagar = recibo.ReciboActual ? recibo.MontoRef - recibo.AbonadoRef : (recibo.MontoRef + Math.Round((recibo.MontoMora + recibo.MontoIndexacion) / recibo.ValorDolar, 2) - recibo.AbonadoRef);
+                                        recibo.MontoRefTotalPagar = recibo.MontoRefTotalPagar < 0 ? 0 : recibo.MontoRefTotalPagar;
+                                        recibo.TotalPagar = Math.Round((recibo.MontoRefTotalPagar ?? 0) * recibo.ValorDolar, 2);
 
                                         _context.ReciboCobros.Update(recibo);
-                                        _context.PagosRecibos.Add(pagoRecibo);
                                     }
 
                                     await _context.SaveChangesAsync();
@@ -1741,13 +1737,10 @@ namespace Prueba.Repositories
                                     IdAsiento = asientoBanco.IdAsiento,
                                 };
 
-                                using (var db_context = new NuevaAppContext())
-                                {
-                                    db_context.Add(ingreso);
-                                    db_context.Add(activo);
+                                _context.Add(ingreso);
+                                _context.Add(activo);
 
-                                    db_context.SaveChanges();
-                                }
+                                _context.SaveChanges();
 
                                 return "exito";
                             }
@@ -1769,11 +1762,11 @@ namespace Prueba.Repositories
                                          join mc in _context.MonedaCuenta
                                          on m.IdMonedaCond equals mc.IdMoneda
                                          where mc.IdCodCuenta == idBanco.IdCodCuenta
-                                         select m;                           
+                                         select m;
 
                             pago.FormaPago = true;
                             pago.SimboloMoneda = moneda.First().Simbolo;
-                            pago.SimboloRef = "$";                            
+                            pago.SimboloRef = "$";
 
                             // registrar pago
                             // registrar pagoPropiedad
@@ -1806,44 +1799,40 @@ namespace Prueba.Repositories
 
                                 #region PAGO RECIBIENDO CUALQUIER MONTO
                                 // PROCESO DE CONFIRMAR PAGO
-                                var montoPago = modelo.Monto; // auxiliar para recorrer los recibos con el monto del pago                         
+                                var montoPago = modelo.Monto; // auxiliar para recorrer los recibos con el monto del pago
+                                var montoPagoRef = Math.Round(montoPago / modelo.ValorDolar, 2);
 
                                 if (recibos != null && recibos.Any())
                                 {
                                     foreach (var recibo in recibos)
                                     {
-                                        decimal pendientePagoRef = recibo.ReciboActual ? recibo.MontoRef - (recibo.Abonado / recibo.ValorDolar) : (recibo.TotalPagar / recibo.ValorDolar);
-                                        decimal pendientePago = pendientePagoRef * _tasaActual;
+                                        decimal pendientePagoRef = Math.Round(recibo.ReciboActual ? recibo.MontoRef - (recibo.Abonado / recibo.ValorDolar) : (recibo.TotalPagar / recibo.ValorDolar), 2);
+                                        decimal pendientePago = Math.Round(pendientePagoRef * modelo.ValorDolar, 2);
 
-                                        if (pendientePago != 0 && pendientePago > montoPago)
+                                        if (/*pendientePago != 0 &&*/ pendientePagoRef > montoPagoRef)
                                         {
-                                            recibo.Abonado += montoPago;
-                                            montoPago = 0;
+                                            recibo.AbonadoRef += montoPagoRef;
+                                            montoPagoRef = 0;
                                         }
-                                        else if (pendientePago != 0 && pendientePago < montoPago)
+                                        else if (/*pendientePago != 0 &&*/ pendientePagoRef < montoPagoRef)
                                         {
-                                            recibo.Abonado += pendientePago;
+                                            recibo.AbonadoRef += pendientePagoRef;
                                             recibo.Pagado = true;
-                                            montoPago -= pendientePago;
+                                            montoPagoRef -= pendientePagoRef;
                                         }
-                                        else if (pendientePago != 0 && pendientePago == montoPago)
+                                        else if (/*pendientePago != 0 && */ pendientePagoRef == montoPagoRef)
                                         {
-                                            recibo.Abonado += montoPago;
+                                            recibo.AbonadoRef += montoPagoRef;
                                             recibo.Pagado = true;
-                                            montoPago = 0;
+                                            montoPagoRef = 0;
                                         }
 
-                                        recibo.TotalPagar = recibo.ReciboActual ? recibo.Monto - recibo.Abonado : recibo.Monto + recibo.MontoMora + recibo.MontoIndexacion - recibo.Abonado;
-                                        recibo.TotalPagar = recibo.TotalPagar < 0 ? 0 : recibo.TotalPagar;
-
-                                        var pagoRecibo = new PagosRecibo()
-                                        {
-                                            IdPago = pago.IdPagoRecibido,
-                                            IdRecibo = recibo.IdReciboCobro
-                                        };
+                                        recibo.Abonado = Math.Round((recibo.AbonadoRef ?? 0) * recibo.ValorDolar, 2);
+                                        recibo.MontoRefTotalPagar = recibo.ReciboActual ? recibo.MontoRef - recibo.AbonadoRef : (recibo.MontoRef + Math.Round((recibo.MontoMora + recibo.MontoIndexacion) / recibo.ValorDolar, 2) - recibo.AbonadoRef);
+                                        recibo.MontoRefTotalPagar = recibo.MontoRefTotalPagar < 0 ? 0 : recibo.MontoRefTotalPagar;
+                                        recibo.TotalPagar = Math.Round((recibo.MontoRefTotalPagar ?? 0) * recibo.ValorDolar, 2);
 
                                         _context.ReciboCobros.Update(recibo);
-                                        _context.PagosRecibos.Add(pagoRecibo);
                                     }
 
                                     await _context.SaveChangesAsync();
@@ -1950,13 +1939,11 @@ namespace Prueba.Repositories
                                     IdAsiento = asientoBanco.IdAsiento,
                                 };
 
-                                using (var db_context = new NuevaAppContext())
-                                {
-                                    db_context.Add(ingreso);
-                                    db_context.Add(activo);
 
-                                    db_context.SaveChanges();
-                                }
+                                _context.Add(ingreso);
+                                _context.Add(activo);
+
+                                _context.SaveChanges();
 
                                 return "exito";
                             }
@@ -1975,7 +1962,7 @@ namespace Prueba.Repositories
                                 Comprobante = "",
                                 Fecha = modelo.Fecha,
                                 Monto = modelo.Monto,
-                                IdPropiedad = modelo.IdPropiedad                               
+                                IdPropiedad = modelo.IdPropiedad
                             };
 
                             _context.NotaCreditos.Add(nota);
@@ -1984,35 +1971,39 @@ namespace Prueba.Repositories
                             {
                                 #region PAGO RECIBIENDO CUALQUIER MONTO
                                 // PROCESO DE CONFIRMAR PAGO
-                                var montoPago = modelo.Monto; // auxiliar para recorrer los recibos con el monto del pago                         
+                                var montoPago = modelo.Monto; // auxiliar para recorrer los recibos con el monto del pago
+                                var montoPagoRef = Math.Round(montoPago / modelo.ValorDolar, 2);
+                                
 
                                 if (recibos != null && recibos.Any())
                                 {
                                     foreach (var recibo in recibos)
                                     {
-                                        decimal pendientePagoRef = recibo.ReciboActual ? recibo.MontoRef - (recibo.Abonado / recibo.ValorDolar) : (recibo.TotalPagar / recibo.ValorDolar);
-                                        decimal pendientePago = pendientePagoRef * _tasaActual;
+                                        decimal pendientePagoRef = Math.Round(recibo.ReciboActual ? recibo.MontoRef - (recibo.Abonado / recibo.ValorDolar) : (recibo.TotalPagar / recibo.ValorDolar), 2);
+                                        decimal pendientePago = Math.Round(pendientePagoRef * modelo.ValorDolar, 2);
 
-                                        if (pendientePago != 0 && pendientePago > montoPago)
+                                        if (/*pendientePago != 0 &&*/ pendientePagoRef > montoPagoRef)
                                         {
-                                            recibo.Abonado += montoPago;                                            
-                                            montoPago = 0;
+                                            recibo.AbonadoRef += montoPagoRef;
+                                            montoPagoRef = 0;
                                         }
-                                        else if (pendientePago != 0 && pendientePago < montoPago)
+                                        else if (/*pendientePago != 0 &&*/ pendientePagoRef < montoPagoRef)
                                         {
-                                            recibo.Abonado += pendientePago;
+                                            recibo.AbonadoRef += pendientePagoRef;
                                             recibo.Pagado = true;
-                                            montoPago -= pendientePago;
+                                            montoPagoRef -= pendientePagoRef;
                                         }
-                                        else if (pendientePago != 0 && pendientePago == montoPago)
+                                        else if (/*pendientePago != 0 && */ pendientePagoRef == montoPagoRef)
                                         {
-                                            recibo.Abonado += montoPago;
+                                            recibo.AbonadoRef += montoPagoRef;
                                             recibo.Pagado = true;
-                                            montoPago = 0;
+                                            montoPagoRef = 0;
                                         }
 
-                                        recibo.TotalPagar = recibo.ReciboActual ? recibo.Monto - recibo.Abonado : recibo.Monto + recibo.MontoMora + recibo.MontoIndexacion - recibo.Abonado;
-                                        recibo.TotalPagar = recibo.TotalPagar < 0 ? 0 : recibo.TotalPagar;
+                                        recibo.Abonado = Math.Round((recibo.AbonadoRef ?? 0) * recibo.ValorDolar, 2);
+                                        recibo.MontoRefTotalPagar = recibo.ReciboActual ? recibo.MontoRef - recibo.AbonadoRef : (recibo.MontoRef + Math.Round((recibo.MontoMora + recibo.MontoIndexacion)/recibo.ValorDolar,2) - recibo.AbonadoRef);
+                                        recibo.MontoRefTotalPagar = recibo.MontoRefTotalPagar < 0 ? 0 : recibo.MontoRefTotalPagar;
+                                        recibo.TotalPagar = Math.Round((recibo.MontoRefTotalPagar ?? 0) * recibo.ValorDolar, 2);
 
                                         _context.ReciboCobros.Update(recibo);
                                     }
@@ -2206,7 +2197,7 @@ namespace Prueba.Repositories
                                      select c).ToListAsync();
 
                 foreach (var item in recibos)
-                {                   
+                {
                     totalMontoRef += item.MontoRef;
                     acumMoraRef += item.MontoMora / item.ValorDolar;
                     acumIndexRef += item.MontoIndexacion / item.ValorDolar;
@@ -2215,7 +2206,7 @@ namespace Prueba.Repositories
                 }
             }
 
-            return totalPagarRef;            
+            return totalPagarRef;
         }
     }
 }
