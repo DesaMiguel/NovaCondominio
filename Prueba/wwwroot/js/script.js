@@ -1191,7 +1191,8 @@ $('.nav-tabs-selector').on('change', function (e) {
 
 
 var ShowPasswordToggle = document.querySelector("[type='password']");
-ShowPasswordToggle.onclick = function () {
+if (ShowPasswordToggle)
+	ShowPasswordToggle.onclick = function () {
 	document
 		.querySelector("[type='password']")
 		.classList.add("input-password");
@@ -1213,3 +1214,21 @@ ShowPasswordToggle.onclick = function () {
 		}
 	}
 };
+
+function parseNumber(s) {
+	if (typeof s !== 'string') s = String(s);
+	// intento directo (Number) — JS espera punto decimal
+	let n = Number(s);
+	if (!Number.isNaN(n)) return n;
+	// si falla, intento normalizar: quito espacios y reemplazo coma por punto
+	const normalized = s.replace(/\s+/g, '').replace(/,/g, '.');
+	n = Number(normalized);
+	if (!Number.isNaN(n)) return n;
+	// último recurso: parseFloat sobre el texto normalizado
+	n = parseFloat(normalized);
+	return Number.isNaN(n) ? NaN : n;
+}
+function formatNumber(s) {
+	let number = s.toFixed(2);
+	return number;
+}

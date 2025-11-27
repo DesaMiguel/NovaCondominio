@@ -1916,13 +1916,13 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
 
-                                table.Cell().Padding(5).Text("Karina Lopez").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Karina Lopez").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
                             });
                         });
 
@@ -2114,10 +2114,10 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("Karina Lopez");
+                                //table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Karina Lopez");
                             });
                         });
 
@@ -2325,10 +2325,10 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("Karina Lopez").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Karina Lopez").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
 
 
 
@@ -2481,10 +2481,10 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por:").Bold();
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("Karina Lopez");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por:").Bold();
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Karina Lopez");
+                                //table.Cell().Padding(5).Text("");
 
                             });
                         });
@@ -2636,10 +2636,10 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("Karina Lopez").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Karina Lopez").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
                             });
                         });
 
@@ -2805,9 +2805,9 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
 
                             });
                         });
@@ -2970,9 +2970,9 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
 
                             });
                         });
@@ -3101,9 +3101,9 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
 
                             });
                         });
@@ -3269,9 +3269,9 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
 
                             });
                         });
@@ -5172,9 +5172,9 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por: Karina Lopez").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
 
                             });
                         });

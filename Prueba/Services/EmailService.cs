@@ -53,11 +53,20 @@ namespace Prueba.Services
             email.Subject = request.Subject;
             email.Body = new TextPart(TextFormat.Html) { Text = request.Body };
 
+            SendMail(email, _config.GetSection("EmailUsername").Value ?? "", _config.GetSection("EmailPassword").Value ?? "");
+        }
+
+        private string SendMail(MimeMessage email, String user, String password)
+        {
             using var smtp = new SmtpClient();
+            //smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
             smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_config.GetSection("EmailUsername").Value, _config.GetSection("EmailPassword").Value);
-            smtp.Send(email);
+            //smtp.AuthenticationMechanisms.Clear();
+            //smtp.AuthenticationMechanisms.Add("LOGIN");
+            smtp.Authenticate(user, password);
+            var result = smtp.Send(email);
             smtp.Disconnect(true);
+            return result ?? "";
         }
 
         /// <summary>
@@ -133,18 +142,14 @@ namespace Prueba.Services
                     </html>"
                 };
 
-                using var smtp2 = new SmtpClient();
-                smtp2.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                smtp2.Authenticate(EmailFrom, password);
-                result = smtp2.Send(email);
-                smtp2.Disconnect(true);
+                SendMail(email, EmailFrom, password);
 
                 return result;
             }
             catch (Exception ex)
             {
                 return $"Error al enviar el correo: {ex.Message}";
-            }            
+            }
         }
 
         /// <summary>
@@ -207,11 +212,7 @@ namespace Prueba.Services
                     </html>"
                 };
 
-                using var smtp = new SmtpClient();
-                smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                smtp.Authenticate(EmailFrom, password);
-                result = smtp.Send(email);
-                smtp.Disconnect(true);
+                SendMail(email, EmailFrom, password);
 
                 return result;
             }
@@ -268,11 +269,8 @@ namespace Prueba.Services
                 </html>"
             };
 
-            using var smtp = new SmtpClient();
-            smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate(EmailFrom, password);
-            smtp.Send(email);
-            smtp.Disconnect(true);
+
+            SendMail(email, EmailFrom, password);
         }
         public void RectificarPagoCuotaEspecial(String EmailFrom, String EmailTo, CuotasEspeciale cuotasEspeciale, PagoRecibido pago, String password)
         {
@@ -314,12 +312,7 @@ namespace Prueba.Services
                 </html>"
             };
 
-            using var smtp = new SmtpClient();
-            smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-            //smtp.Authenticate(_config.GetSection("EmailUsername").Value, _config.GetSection("EmailPassword").Value);
-            smtp.Authenticate(EmailFrom, password);
-            smtp.Send(email);
-            smtp.Disconnect(true);
+            SendMail(email, EmailFrom, password);
         }
         public void EmailGastosCuotas(String EmailFrom, IList<GastosCuotasEmailVM> relacionGastosEmailVM, String password)
         {
@@ -403,12 +396,7 @@ namespace Prueba.Services
                     };
                 }
 
-                using var smtp = new SmtpClient();
-                smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                //smtp.Authenticate(_config.GetSection("EmailUsername").Value, _config.GetSection("EmailPassword").Value);
-                smtp.Authenticate(EmailFrom, password);
-                smtp.Send(email);
-                smtp.Disconnect(true);
+                SendMail(email, EmailFrom, password);
             }
         }
 
@@ -444,11 +432,7 @@ namespace Prueba.Services
                 bodyBuilder.Attachments.Add(pdfAttachment);
                 email.Body = bodyBuilder.ToMessageBody();
 
-                using var smtpClient = new SmtpClient();
-                smtpClient.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                smtpClient.Authenticate(model.From, model.Password);
-                result = smtpClient.Send(email);
-                smtpClient.Disconnect(true);
+                result = SendMail(email, model.From, model.Password);
 
                 return result;
             }
@@ -514,11 +498,7 @@ namespace Prueba.Services
                 bodyBuilder.Attachments.Add(pdfAttachment);
                 email.Body = bodyBuilder.ToMessageBody();
 
-                using var smtpClient = new SmtpClient();
-                smtpClient.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                smtpClient.Authenticate(model.From, model.Password);
-                result = smtpClient.Send(email);
-                smtpClient.Disconnect(true);
+                result = SendMail(email, model.From, model.Password);
 
                 return result;
             }
@@ -528,7 +508,7 @@ namespace Prueba.Services
                 // Maneja el error según tus necesidades (registra, notifica, etc.)
                 return $"Error al enviar el correo: {ex.Message}";
             }
-        
+
         }
 
         public string SendEmailAttachement(EmailAttachmentPdf model)
@@ -558,11 +538,7 @@ namespace Prueba.Services
                 bodyBuilder.Attachments.Add(pdfAttachment);
                 email.Body = bodyBuilder.ToMessageBody();
 
-                using var smtpClient = new SmtpClient();
-                smtpClient.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                smtpClient.Authenticate(model.From, model.Password);
-                result = smtpClient.Send(email);
-                smtpClient.Disconnect(true);
+                result = SendMail(email, model.From, model.Password);
 
                 return result;
             }
@@ -600,11 +576,7 @@ namespace Prueba.Services
                 bodyBuilder.Attachments.Add(pdfAttachment);
                 email.Body = bodyBuilder.ToMessageBody();
 
-                using var smtpClient = new SmtpClient();
-                smtpClient.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                smtpClient.Authenticate(model.From, model.Password);
-                result = smtpClient.Send(email);
-                smtpClient.Disconnect(true);
+                result = SendMail(email, model.From, model.Password);
 
                 return result;
             }
@@ -634,7 +606,7 @@ namespace Prueba.Services
                 email.From.Add(MailboxAddress.Parse(EmailFrom));
                 email.To.Add(MailboxAddress.Parse(EmailTo));
                 email.Subject = "Confirmación de Correo";
-               
+
                 email.Body = new TextPart(TextFormat.Html)
                 {
                     Text =
@@ -653,11 +625,7 @@ namespace Prueba.Services
                     </html>"
                 };
 
-                using var smtp = new SmtpClient();
-                smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                smtp.Authenticate(EmailFrom, password);
-                result = smtp.Send(email);
-                smtp.Disconnect(true);
+                result = SendMail(email, EmailFrom, password);
 
                 return result;
             }
@@ -704,11 +672,7 @@ namespace Prueba.Services
                     </html>"
                 };
 
-                using var smtp = new SmtpClient();
-                smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
-                smtp.Authenticate(EmailFrom, password);
-                result = smtp.Send(email);
-                smtp.Disconnect(true);
+                result = SendMail(email, EmailFrom, password);
 
                 return result;
             }

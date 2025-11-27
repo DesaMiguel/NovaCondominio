@@ -48,7 +48,7 @@ namespace Prueba.Controllers
             _serviceEmail = serviceEmail;
             _signInManager = signInManager;
             _context = context;
-            _tasaActual = _repoMoneda.TasaActualMonedaPrincipal();
+            _tasaActual = Math.Round(_repoMoneda.TasaActualMonedaPrincipal(),2);
         }
 
         // GET: PagoRecibidos

@@ -226,7 +226,8 @@ namespace Prueba.Controllers
                     Pdf = data,
                     FileName = "ComprobantePago_" + propiedad.Codigo + "_" + DateTime.Today.ToString("dd/MM/yyyy"),
                     Subject = "Comprobante de Pago - " + condominio.Nombre,
-                    Password = condominio.ClaveCorreo != null ? condominio.ClaveCorreo : ""
+                    Password = condominio.ClaveCorreo != null ? condominio.ClaveCorreo : "",
+                    Body= "Saludos, Propietario\nSe adjunta el ultimo recibo.\nSin mas que agregar.\nNova Condominio."
                 };
 
                 var result = _servicesEmail.SendEmailRG(email);

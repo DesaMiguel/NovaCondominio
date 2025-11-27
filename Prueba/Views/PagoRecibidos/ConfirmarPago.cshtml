@@ -33,7 +33,6 @@
                                                 <input type="hidden" asp-for="IdCodigoCuentaCaja" />
                                                 <input type="hidden" asp-for="IdPropiedad" />
                                                 <input type="hidden" asp-for="IdRecibo" />
-                                                <input type="hidden" asp-for="ValorDolar" />
                                                 <input type="hidden" asp-for="Imagen" />
 
                                                 @if (Model.ListRecibosIDs != null && Model.ListRecibosIDs.Any())
@@ -64,6 +63,7 @@
                                                 <input asp-for="Fecha" class="form-control" readonly />
                                                 <label class="control-label">Monto</label>
                                                 <input type="number" asp-for="Monto" class="form-control" readonly />
+                                                <input type="number" asp-for="ValorDolar" style="display:none;" />
 
                                                 @* <label for="last-name-column">¿Desea enviar correo a los propietarios?</label>
                                                 <select id="selectEnviarCorreo" class="form-select nav-tabs-selector" onchange="mostrarModal()">

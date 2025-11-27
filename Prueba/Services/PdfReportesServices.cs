@@ -2554,13 +2554,13 @@ namespace Prueba.Services
                                 });
 
 
-                                table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Elaborado por:").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
 
-                                table.Cell().Padding(5).Text("Karina Lopez").FontColor("#607080").Bold().FontSize(8);
-                                table.Cell().Padding(5).Text("");
-                                table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("Karina Lopez").FontColor("#607080").Bold().FontSize(8);
+                                //table.Cell().Padding(5).Text("");
+                                //table.Cell().Padding(5).Text("");
                             });
                         });
 

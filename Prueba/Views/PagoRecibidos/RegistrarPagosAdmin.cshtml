@@ -391,28 +391,30 @@
         });
 
         $("#Monto").change(function(){
-            var monto = $("#Monto").val();
+            var monto = parseNumber($("#Monto").val());
             var fecha = $("#Fecha").val();
-            var tasa = $("#ValorDolar").val();
+            var tasa = parseNumber($("#ValorDolar").val());
 
             if (fecha){
-                var montoRef = monto / parseFloat(tasa);
-                $("#MontoRef").val(montoRef.toFixed(2));
+                var montoRef = monto / tasa;
+                $("#MontoRef").val(formatNumber(montoRef));
+                $("#Monto").val(formatNumber(monto));
             }
         });
         $("#MontoRef").change(function(){
-            var montoRef = $("#MontoRef").val();
+            var montoRef = parseNumber($("#MontoRef").val());
             var fecha = $("#Fecha").val();
-            var tasa = $("#ValorDolar").val();
+            var tasa = parseNumber($("#ValorDolar").val());
 
             if (fecha){
-                var monto = montoRef * parseFloat(tasa);
-                $("#Monto").val(monto.toFixed(2));
+                var monto = montoRef * tasa;
+                $("#MontoRef").val(formatNumber(montoRef));
+                $("#Monto").val(formatNumber(monto));
             }
         });
         $("#Fecha").change(function () {
 
-            var monto = $("#Monto").val();
+            var monto = parseNumber($("#Monto").val());
             var fecha = $("#Fecha").val();
             console.log("Fecha seleccionada: " + fecha);
             console.log("Monto seleccionada: " + monto);
@@ -431,12 +433,22 @@
                         var data = response;
 
                         if (response.tasa > 0) {
-                            $("#ValorDolar").val(response.tasa.toFixed(2));
-                            var montoRef = monto / (Math.round(response.tasa*100)/100);
-                            $("#MontoRef").val(montoRef.toFixed(2));
+                            console.log("1:"+response.tasa);
+                            response.tasa=Math.round(response.tasa*100)/100;
+                            console.log("2:"+response.tasa);
+                            console.log("3:"+formatNumber(response.tasa));
+                            $("#ValorDolar").val(formatNumber(response.tasa));
+                            console.log("4:"+$("#ValorDolar").val());
+                            var montoRef = monto / response.tasa;
+                            console.log("5:"+montoRef);
+                            $("#MontoRef").val(formatNumber(montoRef));
+                            console.log("6:"+$("#MontoRef").val());
+                            $("#Monto").val(formatNumber(monto));
+                            console.log("7:"+$("#Monto").val());
                         } else {
-                            $("#ValorDolar").val(0);
-                            $("#MontoRef").val(0);
+                            $("#ValorDolar").val(formatNumber(0));
+                            $("#MontoRef").val(formatNumber(0));
+                            $("#Monto").val(formatNumber(0));
                         }
                     },
                     failure: function (response) {
@@ -489,24 +501,24 @@
                         var total = 0;
 
                         if (response.deuda > 0) {
-                            deuda = String(response.deuda.toFixed(2));
+                            deuda = String(formatNumber(response.deuda));
                         }
                         if (response.saldo > 0) {
-                            saldo = String(response.saldo.toFixed(2));
+                            saldo = String(formatNumber(response.saldo));
                         }
                         if (response.interes > 0) {
-                            mora = String(response.interes.toFixed(2));
+                            mora = String(formatNumber(response.interes));
                         }
                         if (response.indexacion > 0) {
-                            indexacion = String(response.indexacion.toFixed(2));
+                            indexacion = String(formatNumber(response.indexacion));
                         }
                         if (response.credito > 0) {
-                            credito = String(response.credito.toFixed(2));
+                            credito = String(formatNumber(response.credito));
                         }
 
                         if (response.saldo > response.abonado.toFixed(2)) {
                             var aux = response.deuda + response.saldo + response.interes + response.indexacion - response.credito;
-                            total = String(aux.toFixed(2));
+                            total = String(formatNumber(aux));
                         }
 
                         //var abonado = String(data.abonado.toFixed(2));

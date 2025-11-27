@@ -1,17 +1,18 @@
  using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Prueba.Areas.Identity.Data;
+using Prueba.Context;
 using Prueba.Core;
 using Prueba.Core.Repositories;
-using Prueba.Context;
 using Prueba.Repositories;
 using Prueba.Services;
 using Prueba.Utils;
-using System.Text.Json.Serialization;
 using QuestPDF.Infrastructure;
-using Microsoft.Extensions.Options;
 using System.Globalization;
-using Microsoft.AspNetCore.Localization;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
@@ -42,16 +43,19 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(5));
 
 var supportedCultures = new[] {
-    /*new CultureInfo("es-ES"),
+    //new CultureInfo("es-ES"),
     new CultureInfo("es-VE"),
-    new CultureInfo("es-MX"),
-    new CultureInfo("es-US"),
-    new CultureInfo("es-CO"),*/
-    new CultureInfo("en-US"),
+    //new CultureInfo("es-MX"),
+    //new CultureInfo("es-US"),
+    //new CultureInfo("es-CO"),*/
+    //new CultureInfo("en-US"),
 };
-var defaultCulture = new CultureInfo("en-US");
-CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+var defaultCulture = new CultureInfo("es-VE");
+defaultCulture.NumberFormat.NumberDecimalDigits = 2;
+defaultCulture.NumberFormat.CurrencyDecimalDigits = 2;
+
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("es-VE");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("es-VE");
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
