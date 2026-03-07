@@ -4761,7 +4761,11 @@ namespace Prueba.Services
                                     .Padding(1).Text("Total Ordinarias").FontColor("#607080").Bold().FontSize(8);
 
                                     tabla.Cell().ColumnSpan(2).BorderTop(1).BorderBottom(1).Border(0).BorderColor("#D9D9D9").AlignRight()
-                                    .Padding(1).Text((reciboDetalle.Transacciones.TotalGastos / _tasaActual).ToString("N")).FontColor("#607080").Bold().FontSize(8);
+                                    .Padding(1).Text((
+                                    
+                                    (reciboDetalle.MontoGrupo!=0?reciboDetalle.MontoGrupo:reciboDetalle.Transacciones.TotalGastos) / _tasaActual
+                                    
+                                    ).ToString("N")).FontColor("#607080").Bold().FontSize(8);
 
                                     tabla.Cell().ColumnSpan(2).BorderTop(1).BorderBottom(1).Border(0).BorderColor("#D9D9D9").AlignRight()
                                     .Padding(1).Text("-" + (reciboDetalle.Transacciones.TotalIngresos / _tasaActual).ToString("N")).FontColor("#607080").Bold().FontSize(8);

@@ -93,71 +93,79 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Fecha)
-                                        </td>
-                                        @if (item.Activo != null)
-                                        {
+                                    @if (item == null)
+                                    {
+                                        <tr><td colspan="15">Este Item es nulo</td></tr>
+                                    }
+                                    @if (item != null)
+                                    {
+                                        <tr>
                                             <td>
-                                                @((bool)item.Activo ? "Activo" : "Inactivo")
+                                                @Html.DisplayFor(modelItem => item.Fecha)
                                             </td>
-                                        }
-                                        else
-                                        {
-                                            <td></td>
-                                        }
+                                            @if (item?.Activo != null)
+                                            {
+                                                <td>
+                                                    @((bool)item.Activo ? "Activo" : "Inactivo")
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                            }
 
-                                        @if (item.TipoTransaccion)
-                                        {
+                                            @if (item?.TipoTransaccion ?? false)
+                                            {
+                                                <td>
+                                                    Ingreso
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    Egreso
+                                                </td>
+                                            }
                                             <td>
-                                                Ingreso
+                                                @Html.DisplayFor(modelItem => item.Descripcion)
                                             </td>
-                                        }else
-                                        {
                                             <td>
-                                                Egreso
+                                                @Html.DisplayFor(modelItem => item.Documento)
                                             </td>
-                                        }
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Descripcion)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Documento)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.MontoTotal)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Cancelado)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.SimboloMoneda)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.SimboloRef)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ValorDolar)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.MontoRef)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.IdCodCuentaNavigation.IdCodCuenta)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.IdPropiedadNavigation.Codigo)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.IdProveedorNavigation.Nombre)
-                                        </td>
-                                        <td>
-                                            <a asp-action="Edit" asp-route-id="@item.IdTransaccion">Editar</a> |
-                                            <a asp-action="Details" asp-route-id="@item.IdTransaccion">Detalles</a> |
-                                            <a asp-action="Delete" asp-route-id="@item.IdTransaccion">Eliminar</a>
-                                        </td>
-                                    </tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MontoTotal)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Cancelado)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SimboloMoneda)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SimboloRef)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ValorDolar)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MontoRef)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.IdCodCuentaNavigation.IdCodCuenta)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.IdPropiedadNavigation.Codigo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.IdProveedorNavigation.Nombre)
+                                            </td>
+                                            <td>
+                                                <a asp-action="Edit" asp-route-id="@item?.IdTransaccion">Editar</a> |
+                                                <a asp-action="Details" asp-route-id="@item?.IdTransaccion">Detalles</a> |
+                                                <a asp-action="Delete" asp-route-id="@item?.IdTransaccion">Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    }
                                 }
                             </tbody>
                         </table>

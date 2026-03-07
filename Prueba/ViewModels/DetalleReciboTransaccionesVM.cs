@@ -10,5 +10,6 @@ namespace Prueba.ViewModels
         public ReciboCobro? Recibo { get; set; }
         public RelacionGasto? RelacionGasto { get; set; }
         public TransaccionVM Transacciones { get; set; } = new TransaccionVM();
+        public decimal MontoGrupo { get; set; } = 0;
     }
 }

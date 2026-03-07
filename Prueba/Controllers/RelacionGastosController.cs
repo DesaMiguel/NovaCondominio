@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Runtime.Intrinsics.X86;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -671,7 +664,7 @@ namespace Prueba.Controllers
                                         // mora para cada recibo y sumar a la propiedad
                                         // indexacion por cada recibo y sumar a la propiedad
                                         decimal mora = 0;
-                                       // decimal indexacion = 0;
+                                        // decimal indexacion = 0;
 
                                         if (!reciboVencido.Pagado)
                                         {
@@ -689,7 +682,7 @@ namespace Prueba.Controllers
 
                                             propiedad.Deuda += propiedad.Saldo;
 
-                                           // reciboVencido.MontoIndexacion = indexacion;
+                                            // reciboVencido.MontoIndexacion = indexacion;
                                             reciboVencido.MontoMora = mora;
                                             reciboVencido.TotalPagar = reciboVencido.Monto + mora - reciboVencido.Abonado;
                                             reciboVencido.TotalPagar = reciboVencido.TotalPagar < 0 ? 0 : reciboVencido.TotalPagar;
@@ -866,6 +859,7 @@ namespace Prueba.Controllers
 
                         IList<ReciboCobro> recibosCobroCond = new List<ReciboCobro>();
                         // buscar propiedades
+                        Dictionary<int, decimal> montosGrupos = [];
                         var propiedades = await _context.Propiedads.Where(c => c.IdCondominio == idCondominio).ToListAsync();
 
                         if (propiedades.Any())
@@ -874,8 +868,8 @@ namespace Prueba.Controllers
 
                             foreach (var propiedad in propiedades)
                             {
-                                decimal monto = 0;
-
+                                decimal montoIndividual = 0;
+                                decimal montoGrupos = 0;
                                 // --> ver sus grupos y alicuota
                                 var gruposPropiedad = await _context.PropiedadesGrupos
                                     .Where(c => c.IdPropiedad == propiedad.IdPropiedad)
@@ -888,24 +882,23 @@ namespace Prueba.Controllers
                                     // revisar si esta entre los grupos de la propiedad
                                     if (transaccion.IdPropiedad == null && gruposPropiedad.Exists(c => c.IdGrupoGasto == transaccion.IdGrupo))
                                     {
-                                        if (!transaccion.TipoTransaccion)
-                                        {
-                                            var grupo = gruposPropiedad.First(c => c.IdGrupoGasto == transaccion.IdGrupo);
-                                            if (grupo != null)
-                                            {
-                                                monto += transaccion.MontoTotal * (grupo.Alicuota / 100);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            var grupo = gruposPropiedad.First(c => c.IdGrupoGasto == transaccion.IdGrupo);
-                                            if (grupo != null)
-                                            {
-                                                monto -= transaccion.MontoTotal * (grupo.Alicuota / 100);
-                                            }
-                                        }
+                                        var grupo = gruposPropiedad.First(c => c.IdGrupoGasto == transaccion.IdGrupo);
+                                        if (grupo == null) continue;
+                                        montoIndividual += (transaccion.TipoTransaccion ? -1 : 1) * transaccion.MontoTotal * (grupo.Alicuota / 100);
+                                        montoGrupos += (transaccion.TipoTransaccion ? 0 : 1) * transaccion.MontoTotal;
                                     }
                                 }
+                                //var TransaccionesDelGrupo = transaccionesDelMes.Transaccions
+                                //    .Where(transaccion => transaccion.IdPropiedad == null
+                                //        && gruposPropiedad.Exists(c => c.IdGrupoGasto == transaccion.IdGrupo));
+
+                                //montoIndividual = TransaccionesDelGrupo
+                                //    .Sum(transaccion => (transaccion.TipoTransaccion ? -1 : 1)
+                                //                        * transaccion.MontoTotal
+                                //                        * gruposPropiedad.First(c => c.IdGrupoGasto == transaccion.IdGrupo).Alicuota);
+
+                                //montoGrupos = TransaccionesDelGrupo
+                                //    .Sum(transaccion => (transaccion.TipoTransaccion ? -1 : 1) * transaccion.MontoTotal);
 
                                 // buscar fondosd 
 
@@ -922,12 +915,14 @@ namespace Prueba.Controllers
                                 {
                                     if (fondo.Porcentaje != null && fondo.Porcentaje > 0)
                                     {
-                                        monto += (transaccionesDelMes.Total * (decimal)fondo.Porcentaje / 100) * (propiedad.Alicuota / 100);
+                                        //montoGrupos += (transaccionesDelMes.Total * (decimal)fondo.Porcentaje / 100);
+                                        montoIndividual += (transaccionesDelMes.Total * (decimal)fondo.Porcentaje / 100) * (propiedad.Alicuota / 100);
                                     }
 
                                     if (fondo.Monto != null && fondo.Monto > 0)
                                     {
-                                        monto += (decimal)fondo.Monto * (propiedad.Alicuota / 100);
+                                        //montoGrupos += (decimal)fondo.Monto;
+                                        montoIndividual += (decimal)fondo.Monto * (propiedad.Alicuota / 100);
                                     }
                                 }
 
@@ -935,7 +930,8 @@ namespace Prueba.Controllers
                                 var individuales = transaccionesDelMes.TransaccionesIndividuales.Where(c => c.IdPropiedad == propiedad.IdPropiedad).ToList();
                                 if (individuales.Any())
                                 {
-                                    monto += individuales.Sum(c => c.MontoTotal);
+                                    montoIndividual += individuales.Sum(c => c.MontoTotal);
+                                    montoGrupos += individuales.Sum(c => c.MontoTotal);
 
                                     foreach (var item in individuales)
                                     {
@@ -988,7 +984,7 @@ namespace Prueba.Controllers
                                         reciboVencido.TotalPagar = reciboVencido.Monto + mora - reciboVencido.Abonado;
                                         reciboVencido.TotalPagar = reciboVencido.TotalPagar < 0 ? 0 : reciboVencido.TotalPagar;
 
-                                        
+
                                     }
 
                                     //_context.ReciboCobros.Update(reciboVencido);
@@ -1005,7 +1001,7 @@ namespace Prueba.Controllers
                                 /// modificar saldo = x |                               
 
 
-                                propiedad.Saldo = monto - credito;
+                                propiedad.Saldo = montoIndividual - credito;
                                 propiedad.Creditos = 0;
                                 propiedad.Deuda = recibosViejos
                                         .Where(c => !c.Pagado && !c.ReciboActual)
@@ -1017,16 +1013,16 @@ namespace Prueba.Controllers
                                 {
                                     IdPropiedad = propiedad.IdPropiedad,
                                     IdRgastos = relacionGasto.IdRgastos,
-                                    Monto = monto - credito,
+                                    Monto = montoIndividual - credito,
                                     Fecha = DateTime.Today,
                                     Pagado = false,
                                     EnProceso = false,
                                     Abonado = 0,
-                                    MontoRef = monto / tasaActual,
+                                    MontoRef = montoIndividual / tasaActual,
                                     ValorDolar = tasaActual,
                                     SimboloMoneda = monedaPrincipal.First().Simbolo,
                                     SimboloRef = "$",
-                                    MontoMora = monto * (condominio.InteresMora / 100),
+                                    MontoMora = montoIndividual * (condominio.InteresMora / 100),
                                     MontoIndexacion = 0,
                                     Mes = mes,
                                     ReciboActual = true,
@@ -1034,6 +1030,8 @@ namespace Prueba.Controllers
                                 };
 
                                 recibosCobroCond.Add(recibo);
+
+                                montosGrupos[propiedad.IdPropiedad] = montoGrupos;
                                 // registrar recibo 
                                 // actualizar propiedad
 
@@ -1061,7 +1059,7 @@ namespace Prueba.Controllers
                             {
                                 var propiedad = await _context.Propiedads.FindAsync(recibo.IdPropiedad);
                                 //var rg = await _context.RelacionGastos.FindAsync(recibo.IdRgastos);
-                                var gruposPropiedad = await _context.PropiedadesGrupos.Where(c => c.IdPropiedad == propiedad.IdPropiedad).ToListAsync();
+                                var gruposPropiedad = await _context.PropiedadesGrupos.Where(c => c.IdPropiedad == recibo.IdPropiedad).ToListAsync();
                                 //var transacciones = await _repoRelacionGastos.LoadTransaccionesMes(rg.IdRgastos);
 
                                 item.Recibo = recibo;
@@ -1069,6 +1067,7 @@ namespace Prueba.Controllers
                                 item.GruposPropiedad = gruposPropiedad;
                                 item.RelacionGasto = aux.RelacionGasto;
                                 item.Transacciones = aux.RelacionGastosTransacciones;
+                                item.MontoGrupo = montosGrupos[recibo.IdPropiedad];
                             }
 
                             modelo.Add(item);
@@ -1410,9 +1409,9 @@ namespace Prueba.Controllers
                     .FirstOrDefaultAsync(c => c.IdPropiedad == recibo.IdPropiedad);
 
                 var pagosRecibidos = (from c in recibo.PagosRecibos
-                                     join d in _context.PagoRecibidos.Include(c => c.ReferenciasPrs)
-                                     on c.IdPago equals d.IdPagoRecibido
-                                     select d).ToList();
+                                      join d in _context.PagoRecibidos.Include(c => c.ReferenciasPrs)
+                                      on c.IdPago equals d.IdPagoRecibido
+                                      select d).ToList();
 
                 var data = _servicesPdfReportes.ReciboPagadoPDF(new ReciboPagadoVM()
                 {
@@ -1422,7 +1421,7 @@ namespace Prueba.Controllers
                 });
 
                 Stream stream = new MemoryStream(data);
-                return File(stream, "application/pdf", "ComprobanteRecibo_" + recibo.Mes +".pdf");
+                return File(stream, "application/pdf", "ComprobanteRecibo_" + recibo.Mes + ".pdf");
             }
 
             return View("PagosConfirmados");

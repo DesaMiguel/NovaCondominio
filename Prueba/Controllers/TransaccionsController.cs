@@ -36,8 +36,8 @@ namespace Prueba.Controllers
                 .Include(t => t.IdCodCuentaNavigation)
                 .Include(t => t.IdPropiedadNavigation)
                 .Include(t => t.IdProveedorNavigation);
-
-            return View(await nuevaAppContext.ToListAsync());
+            var result = await nuevaAppContext.ToListAsync();
+            return View(result);
         }
 
         // GET: Transaccions/Details/5
