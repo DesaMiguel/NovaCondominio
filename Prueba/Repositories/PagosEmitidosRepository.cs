@@ -489,16 +489,16 @@ namespace Prueba.Repositories
                     //    Activo = true
                     //};
 
-                    using (var _dbContext = new NuevaAppContext())
+                    //using (var _dbContext = new NuevaAppContext())
                     {
 
-                        _dbContext.Add(pago);
-                        //_dbContext.Add(transaccion);
-                        _dbContext.Update(monedaCuenta);
-                        _dbContext.Update(factura);
-                        _dbContext.Update(itemCuentasPagar);
+                        _context.Add(pago);
+                        //_context.Add(transaccion);
+                        _context.Update(monedaCuenta);
+                        _context.Update(factura);
+                        _context.Update(itemCuentasPagar);
 
-                        await _dbContext.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
 
                         if (modelo.AnticiposIds.Any())
                         {
@@ -513,8 +513,8 @@ namespace Prueba.Repositories
                                         IdFactura = modelo.IdFactura,
                                         IdAnticipo = anticipo.IdAnticipo
                                     };
-                                    _dbContext.Update(anticipo);
-                                    _dbContext.PagoFacturas.Add(pagoFactura);
+                                    _context.Update(anticipo);
+                                    _context.PagoFacturas.Add(pagoFactura);
                                 }
                             }
                         }
@@ -526,11 +526,11 @@ namespace Prueba.Repositories
                                 IdFactura = modelo.IdFactura,
                                // IdAnticipo = anticipo.IdAnticipo
                             };
-                            //_dbContext.Update(anticipo);
-                            _dbContext.PagoFacturas.Add(pagoFactura);
+                            //_context.Update(anticipo);
+                            _context.PagoFacturas.Add(pagoFactura);
                         }
 
-                        _dbContext.SaveChanges();
+                        _context.SaveChanges();
                     }                    
 
                     // registrar comprobantes
@@ -771,12 +771,12 @@ namespace Prueba.Repositories
                             SimboloRef = monedaPrincipal.First().Simbolo
 
                         };
-                        using (var _dbContext = new NuevaAppContext())
+                        //using (var _dbContext = new NuevaAppContext())
                         {
-                            _dbContext.Add(asientoProvisionGasto);
-                            _dbContext.Add(asientoProvision);
-                            _dbContext.Add(asientoProvisionCaja);
-                            _dbContext.SaveChanges();
+                            _context.Add(asientoProvisionGasto);
+                            _context.Add(asientoProvision);
+                            _context.Add(asientoProvisionCaja);
+                            _context.SaveChanges();
                         }
 
                         //REGISTRAR ASIENTO EN LA TABLA GASTOS
@@ -795,13 +795,13 @@ namespace Prueba.Repositories
                         //    IdAsiento = asientoProvisionGasto.IdAsiento
                         //};
 
-                        using (var _dbContext = new NuevaAppContext())
+                        //using (var _dbContext = new NuevaAppContext())
                         {
-                            _dbContext.Add(activoProvision);
-                            _dbContext.Add(pasivoProvision);
-                            //_dbContext.Add(gastoProvision);
-                            //_dbContext.Add(pagoFactura);
-                            _dbContext.SaveChanges();
+                            _context.Add(activoProvision);
+                            _context.Add(pasivoProvision);
+                            //_context.Add(gastoProvision);
+                            //_context.Add(pagoFactura);
+                            _context.SaveChanges();
                         }
                         resultado = "exito";
                     }
@@ -854,12 +854,12 @@ namespace Prueba.Repositories
                             IdAsiento = asientoCaja.IdAsiento
                         };
 
-                        using (var _dbContext = new NuevaAppContext())
+                        //using (var _dbContext = new NuevaAppContext())
                         {
-                            _dbContext.Add(gasto);
-                            _dbContext.Add(activo);
-                            //_dbContext.Add(pagoFactura);
-                            _dbContext.SaveChanges();
+                            _context.Add(gasto);
+                            _context.Add(activo);
+                            //_context.Add(pagoFactura);
+                            _context.SaveChanges();
 
                         }
 
@@ -1110,23 +1110,23 @@ namespace Prueba.Repositories
                     //    Activo = true
                     //};
 
-                    using (var _dbContext = new NuevaAppContext())
+                    //using (var _dbContext = new NuevaAppContext())
                     {
                         if (!modelo.AnticiposIds.Any())
                         {
                             pago.Monto = auxPagoMonto;
-                            _dbContext.Add(pago);
+                            _context.Add(pago);
                         }
                         else
                         {
-                            _dbContext.Add(pago);
+                            _context.Add(pago);
                         }
-                        //_dbContext.Add(transaccion);
-                        _dbContext.Update(monedaCuenta);
-                        _dbContext.Update(factura);
-                        _dbContext.Update(itemCuentasPagar);
+                        //_context.Add(transaccion);
+                        _context.Update(monedaCuenta);
+                        _context.Update(factura);
+                        _context.Update(itemCuentasPagar);
 
-                        await _dbContext.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
 
                         if (modelo.AnticiposIds.Any())
                         {
@@ -1142,8 +1142,8 @@ namespace Prueba.Repositories
                                         IdFactura = modelo.IdFactura,
                                         IdAnticipo = anticipo.IdAnticipo
                                     };
-                                    _dbContext.Update(anticipo);
-                                    _dbContext.PagoFacturas.Add(pagoFactura);
+                                    _context.Update(anticipo);
+                                    _context.PagoFacturas.Add(pagoFactura);
                                 }
                             }
                         }
@@ -1155,11 +1155,11 @@ namespace Prueba.Repositories
                                 IdFactura = modelo.IdFactura,
                                 // IdAnticipo = anticipo.IdAnticipo
                             };
-                            //_dbContext.Update(anticipo);
-                            _dbContext.PagoFacturas.Add(pagoFactura);
+                            //_context.Update(anticipo);
+                            _context.PagoFacturas.Add(pagoFactura);
                         }
 
-                        _dbContext.SaveChanges();
+                        _context.SaveChanges();
                     }
                    
 
@@ -1170,10 +1170,10 @@ namespace Prueba.Repositories
                         Banco = modelo.IdCodigoCuentaBanco.ToString()
                     };
 
-                    using (var _dbContext = new NuevaAppContext())
+                    //using (var _dbContext = new NuevaAppContext())
                     {
-                        _dbContext.Add(referencia);
-                        _dbContext.SaveChanges();
+                        _context.Add(referencia);
+                        _context.SaveChanges();
                     }
 
                     // registrar comprobantes
@@ -1414,12 +1414,12 @@ namespace Prueba.Repositories
                             SimboloRef = monedaPrincipal.First().Simbolo
 
                         };
-                        using (var _dbContext = new NuevaAppContext())
+                        //using (var _dbContext = new NuevaAppContext())
                         {
-                            _dbContext.Add(asientoProvisionGasto);
-                            _dbContext.Add(asientoProvision);
-                            _dbContext.Add(asientoProvisionBanco);
-                            _dbContext.SaveChanges();
+                            _context.Add(asientoProvisionGasto);
+                            _context.Add(asientoProvision);
+                            _context.Add(asientoProvisionBanco);
+                            _context.SaveChanges();
                         }
 
                         //REGISTRAR ASIENTO EN LA TABLA GASTOS
@@ -1438,12 +1438,12 @@ namespace Prueba.Repositories
                         //    IdAsiento = asientoProvisionGasto.IdAsiento
                         //};
 
-                        using (var _dbContext = new NuevaAppContext())
+                        //using (var _dbContext = new NuevaAppContext())
                         {
-                            _dbContext.Add(activoProvision);
-                            _dbContext.Add(pasivoProvision);
-                            // _dbContext.Add(gastoProvision);
-                            _dbContext.SaveChanges();
+                            _context.Add(activoProvision);
+                            _context.Add(pasivoProvision);
+                            // _context.Add(gastoProvision);
+                            _context.SaveChanges();
                         }
 
                         return "exito";
@@ -1482,11 +1482,11 @@ namespace Prueba.Repositories
 
                         };
 
-                        using (var _dbContext = new NuevaAppContext())
+                        //using (var _dbContext = new NuevaAppContext())
                         {
-                            _dbContext.Add(asientoGasto);
-                            _dbContext.Add(asientoBanco);
-                            _dbContext.SaveChanges();
+                            _context.Add(asientoGasto);
+                            _context.Add(asientoBanco);
+                            _context.SaveChanges();
                         }
 
                         //REGISTRAR ASIENTO EN LA TABLA GASTOS
@@ -1500,12 +1500,12 @@ namespace Prueba.Repositories
                             IdAsiento = asientoBanco.IdAsiento
                         };
 
-                        using (var _dbContext = new NuevaAppContext())
+                        //using (var _dbContext = new NuevaAppContext())
                         {
-                            _dbContext.Add(gasto);
-                            _dbContext.Add(activo);
-                            //_dbContext.Add(pagoFactura);
-                            _dbContext.SaveChanges();
+                            _context.Add(gasto);
+                            _context.Add(activo);
+                            //_context.Add(pagoFactura);
+                            _context.SaveChanges();
                         }
 
                         return "exito";
