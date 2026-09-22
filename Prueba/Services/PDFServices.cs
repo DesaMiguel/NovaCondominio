@@ -2994,6 +2994,7 @@ namespace Prueba.Services
             var pagoCobro = await _context.PagoCobroTransitos.FirstAsync(c => c.IdCobroTransito == cobroTransito.IdCobroTransito);
             var pago = await _context.PagoRecibidos.FindAsync(pagoCobro.IdPagoRecibido);
             var condominio = await _context.Condominios.FindAsync(pago.IdCondominio);
+            string tasa = Math.Round(pago.Monto / pago.MontoRef, 2).ToString("F2");
 
             var data = Document.Create(container =>
             {
@@ -3006,7 +3007,9 @@ namespace Prueba.Services
                         row.RelativeItem().Padding(5).Column(col =>
                         {
                             col.Item().MaxWidth(100).MaxHeight(60).Image("wwwroot/images/yllenAzul.png");
-                            col.Item().PaddingTop(10).Text("Fecha: " + DateTime.Today.ToString("dd/MM/yyyy")).Bold().FontColor("#004581").Bold().FontSize(8);
+                            col.Item().PaddingTop(10).Text("Fecha Impresión: " + DateTime.Today.ToString("dd/MM/yyyy")).Bold().FontColor("#004581").Bold().FontSize(8);
+                            col.Item().PaddingTop(0).Text("Tasa: "+ tasa).Bold().FontColor("#004581").Bold().FontSize(8);
+                            col.Item().PaddingTop(0).Text("Fecha de la tasa: " + pago.Fecha.ToString("dd/MM/yyyy")).Bold().FontColor("#004581").Bold().FontSize(8);
 
                         });
                         row.RelativeItem().Padding(5).Column(col =>
@@ -3036,7 +3039,7 @@ namespace Prueba.Services
                                 tabla.Cell().ColumnSpan(3).Text("");
 
                                 tabla.Cell().Text("La cantidad de: ").FontColor("#607080").Bold().FontSize(8);
-                                tabla.Cell().ColumnSpan(2).Text(pago.Monto.ToString("N")).FontColor("#607080").FontSize(8);
+                                tabla.Cell().ColumnSpan(2).Text(pago.Monto.ToString("N")+"("+ pago.MontoRef.ToString("N") + "$)").FontColor("#607080").FontSize(8);
 
                                 tabla.Cell().Text("Por concepto de Pagó: ").FontColor("#607080").Bold().FontSize(8);
                                 tabla.Cell().ColumnSpan(2).Text(pago.Concepto).FontColor("#607080").FontSize(8);
@@ -3047,6 +3050,7 @@ namespace Prueba.Services
                             {
                                 tabla.ColumnsDefinition(columns =>
                                 {
+                                    columns.RelativeColumn();
                                     columns.RelativeColumn();
                                     columns.RelativeColumn();
                                     columns.RelativeColumn();
@@ -3067,6 +3071,9 @@ namespace Prueba.Services
                                     header.Cell().BorderBottom(1).Padding(5).BorderColor("#D9D9D9").AlignMiddle()
                                    .Text("Monto").FontColor("#607080").Bold().FontSize(8);
 
+                                    header.Cell().BorderBottom(1).Padding(5).BorderColor("#D9D9D9").AlignMiddle()
+                                   .Text("Monto($)").FontColor("#607080").Bold().FontSize(8);
+
                                 });
 
                                 var referencia = _context.ReferenciasPrs.FirstOrDefault(c => c.IdPagoRecibido == pago.IdPagoRecibido);
@@ -3079,6 +3086,7 @@ namespace Prueba.Services
                                     tabla.Cell().Padding(5).Text(subcuenta.Descricion.ToString()).FontColor("#607080").FontSize(8);
                                     tabla.Cell().Padding(5).Text(referencia.NumReferencia.ToString()).FontColor("#607080").FontSize(8);
                                     tabla.Cell().Padding(5).Text(pago.Monto.ToString("N")).FontColor("#607080").FontSize(8);
+                                    tabla.Cell().Padding(5).Text(pago.MontoRef.ToString("N")).FontColor("#607080").FontSize(8);
                                 }
                                 else
                                 {
@@ -3086,6 +3094,7 @@ namespace Prueba.Services
                                     tabla.Cell().Padding(5).Text("Efectivo").FontColor("#607080").FontSize(8);
                                     tabla.Cell().Padding(5).Text("Efectivo").FontColor("#607080").FontSize(8);
                                     tabla.Cell().Padding(5).Text(pago.Monto.ToString("N")).FontColor("#607080").FontSize(8);
+                                    tabla.Cell().Padding(5).Text(pago.MontoRef.ToString("N")).FontColor("#607080").FontSize(8);
                                 }
 
                             });
@@ -3094,6 +3103,7 @@ namespace Prueba.Services
                             {
                                 table.ColumnsDefinition(columns =>
                                 {
+                                    columns.RelativeColumn();
                                     columns.RelativeColumn();
                                     columns.RelativeColumn();
                                     columns.RelativeColumn();
