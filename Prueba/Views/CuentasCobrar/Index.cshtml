@@ -69,7 +69,7 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>
+                                        <td data-order="@item.IdFacturaNavigation.FechaEmision.ToString("yyyyMMddHHmmss")">
                                             @* @Html.DisplayFor(modelItem => item.IdFacturaNavigation.FechaEmision.ToString("dd/MM/yyyy")) *@
                                             @item.IdFacturaNavigation.FechaEmision.ToString("dd/MM/yyyy")
                                         </td>

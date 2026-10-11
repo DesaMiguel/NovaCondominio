@@ -182,7 +182,7 @@ namespace Prueba.Controllers
             var ordenPago = await _context.OrdenPagos.FindAsync(id);
             if (ordenPago != null)
             {
-                var pago = await _context.PagoEmitidos.FindAsync(ordenPago.IdPagoEmitido);
+                var pago = await _context.PagoEmitidos.FirstOrDefaultAsync(p => p.IdPagoEmitido == ordenPago.IdPagoEmitido);
                 if (pago != null)
                 {
                     var referencia = await _context.ReferenciasPes.FirstOrDefaultAsync(c => c.IdPagoEmitido == pago.IdPagoEmitido);
@@ -353,7 +353,7 @@ namespace Prueba.Controllers
             var ordenPago = await _context.OrdenPagos.FindAsync(id);
             if (ordenPago != null)
             {
-                var pago = await _context.PagoEmitidos.FindAsync(ordenPago.IdPagoEmitido);
+                var pago = await _context.PagoEmitidos.FirstOrDefaultAsync(p => p.IdPagoEmitido == ordenPago.IdPagoEmitido);
 
                 if (pago != null)
                 {

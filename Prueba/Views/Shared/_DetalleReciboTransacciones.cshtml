@@ -14,7 +14,7 @@
             @if (Model.RelacionGasto != null)
             {
                 <tr class="tr_s">
-                    <td>@Model.RelacionGasto.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td data-order="@Model.RelacionGasto.Fecha.ToString("yyyyMMddHHmmss")">@Model.RelacionGasto.Fecha.ToString("dd/MM/yyyy")</td>
                     <td>@Model.RelacionGasto.TotalMensual.ToString("N") Bs</td>
                     <td>@Model.RelacionGasto.MontoRef.ToString("N") $</td>
                     <td><a asp-route-id="@Model.RelacionGasto.IdRgastos" asp-controller="RelacionGastos" asp-action="Details">Detalles</a></td>
@@ -73,7 +73,7 @@
                         if (grupo != null)
                         {
                             <tr class="tr_s">
-                                <td>@transaccion.Fecha.ToString("dd/MM/yyyy")</td>
+                                <td data-order="@transaccion.Fecha.ToString("yyyyMMddHHmmss")">@transaccion.Fecha.ToString("dd/MM/yyyy")</td>
                                 <td>@transaccion.Descripcion</td>
                                 <td>@transaccion.Documento</td>
                                 @if (transaccion.TipoTransaccion)
@@ -189,7 +189,7 @@
                     if (Model.Propiedad.IdPropiedad == transaccion.IdPropiedad && grupo != null)
                     {
                         <tr class="tr_s">
-                            <td>@transaccion.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td data-order="@transaccion.Fecha.ToString("yyyyMMddHHmmss")">@transaccion.Fecha.ToString("dd/MM/yyyy")</td>
                             <td>@transaccion.Descripcion</td>
                             <td>@transaccion.Documento</td>
 

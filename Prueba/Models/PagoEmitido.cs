@@ -26,6 +26,7 @@ public partial class PagoEmitido
     public bool Activo { get; set; }
 
     public string? Concepto { get; set; }
+    public DateTime? FechaAnulado { get; set; }
 
     public virtual ICollection<AnticipoNomina> AnticipoNominas { get; set; } = new List<AnticipoNomina>();
 

@@ -66,7 +66,7 @@
                                         @if (pago != null)
                                         {
                                             <tr>
-                                                <td>
+                                                <td data-order="@pago.Fecha.ToString("yyyyMMddHHmmss")">
                                                     @pago.Fecha.ToString("dd/MM/yyyy")
                                                 </td>
                                                 <td>

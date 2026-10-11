@@ -46,7 +46,7 @@
                     {
                         var subcuenta = Model.SubcuentasGastos.Where(c => c.Id == idcc.First().IdSubCuenta).ToList();
                         <tr class="tr_s">
-                            <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td data-order="@item.Fecha.ToString("yyyyMMddHHmmss")">@item.Fecha.ToString("dd/MM/yyyy")</td>
                             <td>@subcuenta.First().Descricion</td>
                             <td>@item.Monto.ToString("N") @item.SimboloMoneda</td>
                             <td>@item.ValorDolar.ToString("N")</td>

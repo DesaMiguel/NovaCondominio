@@ -92,7 +92,7 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>
+                                        <td data-order="@item.FechaEmision.ToString("yyyyMMddHHmmss")">
                                             @Html.DisplayFor(modelItem => item.FechaEmision)
                                         </td>
                                         <td>
@@ -104,7 +104,7 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Descripcion)
                                         </td>                                        
-                                        <td>
+                                        <td data-order="@item.FechaVencimiento.ToString("yyyyMMddHHmmss")">
                                             @Html.DisplayFor(modelItem => item.FechaVencimiento)
                                         </td>
                                         <td>

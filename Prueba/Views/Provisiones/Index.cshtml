@@ -69,10 +69,10 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Monto)
                                         </td>
-                                        <td>
+                                        <td data-order="@item.FechaInicio.ToString("yyyyMMddHHmmss")">
                                             @Html.DisplayFor(modelItem => item.FechaInicio)
                                         </td>
-                                        <td>
+                                        <td data-order="@item.FechaFin.ToString("yyyyMMddHHmmss")">
                                             @Html.DisplayFor(modelItem => item.FechaFin)
                                         </td>
                                         <td>

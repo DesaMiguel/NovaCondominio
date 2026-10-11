@@ -40,7 +40,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>@Model.ConciliacionAnterior.FechaEmision</td>
+                                    <td data-order="@Model.ConciliacionAnterior.FechaEmision.ToString("yyyyMMddHHmmss")">@Model.ConciliacionAnterior.FechaEmision</td>
                                     <td>@Model.SubCuenta.Descricion</td>
                                     <td>@Model.TotalIngreso</td>
                                     <td>@Model.TotalEgreso</td>
@@ -89,7 +89,7 @@
                                         @if (pago != null)
                                         {
                                             <tr>
-                                                <td>
+                                                <td data-order="@pago.Fecha.ToString("yyyyMMddHHmmss")">
                                                     @pago.Fecha.ToString("dd/MM/yyyy")
                                                 </td>
                                                 <td>

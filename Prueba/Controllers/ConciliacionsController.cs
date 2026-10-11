@@ -572,7 +572,7 @@ namespace Prueba.Controllers
             {
                 if (item.Selected)
                 {
-                    var pago = await _context.PagoEmitidos.FindAsync(Convert.ToInt32(item.Value));
+                    var pago = await _context.PagoEmitidos.FirstOrDefaultAsync(p => p.IdPagoEmitido == Convert.ToInt32(item.Value));
                     modelo.TotalEgreso += pago != null ? pago.Monto : 0;
                 }
             }
@@ -650,7 +650,7 @@ namespace Prueba.Controllers
                     {
                         if (item.Selected)
                         {
-                            var pago = await _context.PagoEmitidos.FindAsync(Convert.ToInt32(item.Value));
+                            var pago = await _context.PagoEmitidos.FirstOrDefaultAsync(p => p.IdPagoEmitido == Convert.ToInt32(item.Value));
                             // desactivar los pagos
                             // desactivar los objetos relacionados
                             if (pago != null)

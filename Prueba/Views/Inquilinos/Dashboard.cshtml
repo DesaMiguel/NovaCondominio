@@ -111,7 +111,7 @@
                                             {
                                                 <tr class="tr_s">
                                                     <td>@recibo.Mes</td>
-                                                    <td>@recibo.Fecha.ToString("dd/MM/yyyy")</td>
+                                                    <td data-order="@recibo.Fecha.ToString("yyyyMMddHHmmss")">@recibo.Fecha.ToString("dd/MM/yyyy")</td>
                                                     <td>@recibo.Monto.ToString("N")</td>
                                                     <td>@recibo.Abonado</td>
                                                     <td>@recibo.TotalPagar.ToString("N")</td>

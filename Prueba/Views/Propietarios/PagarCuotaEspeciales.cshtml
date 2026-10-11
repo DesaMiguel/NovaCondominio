@@ -224,7 +224,7 @@
         function LoadTable(tableId, list) {
             CLearTable(tableId);
             $.each(list, function (idex, value) {
-                $(tableId).append("<tr><td>" + value.monto + "</td><td>" + value.fecha + "</td><tr>");
+                $(tableId).append("<tr><td>" + value.monto + "</td><td data-order='" + value.fecha.slice(0, 10).replace(/-/g, '') + "'>" + value.fecha + "</td><tr>");
             });
         }
 

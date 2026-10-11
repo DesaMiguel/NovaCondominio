@@ -93,7 +93,7 @@
                                             @foreach (var pago in Model.Pagos)
                                             {
                                                 <tr>
-                                                    <td>
+                                                    <td data-order="@pago.IdPagoNavigation.Fecha.ToString("yyyyMMddHHmmss")">
                                                         @pago.IdPagoNavigation.Fecha.ToString("dd/MM/yyyy")
                                                     </td>
                                                     

@@ -71,7 +71,7 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Numero)
                                         </td>
-                                        <td>
+                                        <td data-order="@item.Fecha.ToString("yyyyMMddHHmmss")">
                                             @Html.DisplayFor(modelItem => item.Fecha)
                                         </td>
                                         <td>

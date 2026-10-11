@@ -76,7 +76,7 @@
 
                                                     <th>@item.Key.Codigo</th>
 
-                                                    <td>@pago.Fecha.ToString("dd/MM/yyyy")</td>
+                                                    <td data-order="@pago.Fecha.ToString("yyyyMMddHHmmss")">@pago.Fecha.ToString("dd/MM/yyyy")</td>
                                                     <td>@pago.Monto.ToString("N")</td>
                                                     @if (pago.FormaPago)
                                                     {

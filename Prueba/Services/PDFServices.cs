@@ -5057,7 +5057,7 @@ namespace Prueba.Services
             var empleado = await _context.Empleados.FindAsync(recibo.IdEmpleado);
 
             var pagoNomina = await _context.PagosNominas.FirstAsync(c => c.IdReciboNomina == recibo.IdReciboNomina);
-            var pago = await _context.PagoEmitidos.FindAsync(pagoNomina.IdPagoEmitido);
+            var pago = await _context.PagoEmitidos.FirstOrDefaultAsync(p => p.IdPagoEmitido == pagoNomina.IdPagoEmitido);
 
             var data = Document.Create(container =>
             {

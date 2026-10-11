@@ -78,7 +78,7 @@ namespace Prueba.Repositories
 
         public async Task<int> Delete(int id)
         {
-            var pagoEmitido = await _context.PagoEmitidos.FindAsync(id);
+            var pagoEmitido = await _context.PagoEmitidos.FirstOrDefaultAsync(p => p.IdPagoEmitido == id);
 
             if (pagoEmitido != null)
             {

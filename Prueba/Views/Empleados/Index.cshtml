@@ -87,7 +87,7 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Cedula)
                                         </td>
-                                        <td>
+                                        <td data-order="@item.FechaIngreso.ToString("yyyyMMddHHmmss")">
                                             @Html.DisplayFor(modelItem => item.FechaIngreso)
                                         </td>
                                         <td>

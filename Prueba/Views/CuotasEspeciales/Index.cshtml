@@ -47,7 +47,7 @@
                                         <tr class="tr_s">
                                             <td>@item.Descripcion</td>
                                             <td>@string.Format("{0:N2}", item.SubCuotas) @item.SimboloMoneda</td>
-                                            <td>@item.FechaInicio</td>
+                                            <td data-order="@item.FechaInicio.ToString("yyyyMMddHHmmss")">@item.FechaInicio</td>
                                             <td>@(item.Activa ? "Si" : "No")</td>
                                             <td>@string.Format("{0:N2}", item.MontoTotal) @item.SimboloMoneda</td>
                                             <td>@item.ValorDolar.ToString("N2") @item.SimboloMoneda</td>

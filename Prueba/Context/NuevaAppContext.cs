@@ -1385,6 +1385,8 @@ public partial class NuevaAppContext : DbContext
         {
             entity.HasKey(e => e.IdPagoEmitido);
 
+            entity.HasQueryFilter(e => e.FechaAnulado == null);
+
             entity.ToTable("Pago_Emitido");
 
             entity.Property(e => e.IdPagoEmitido).HasColumnName("id_pagoEmitido");

@@ -9,7 +9,7 @@
             <tr class="tr_s">
                 <td>@item.Descripcion</td>
                 <td>@string.Format("{0:N2}", item.SubCuotas) @item.SimboloMoneda</td>
-                <td>@item.FechaInicio</td>
+                <td data-order="@item.FechaInicio.ToString("yyyyMMddHHmmss")">@item.FechaInicio</td>
                 @if (item.Activa == true)
                 {
                     <td>Si</td>

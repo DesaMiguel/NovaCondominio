@@ -68,7 +68,7 @@
                                                         {
                                                             <tr class="tr_s">
 
-                                                                <td>@(pago.Fecha.ToString("dd/MM/yyyy"))</td>
+                                                                <td data-order="@pago.Fecha.ToString("yyyyMMddHHmmss")">@(pago.Fecha.ToString("dd/MM/yyyy"))</td>
                                                                 <td>@diccUsuarioPropiedad.Key.FirstName</td>
                                                                 <td>@propiedad.Codigo</td>
                                                                 <td>@pago.Concepto</td>

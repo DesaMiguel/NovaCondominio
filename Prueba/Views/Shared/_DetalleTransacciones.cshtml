@@ -38,7 +38,7 @@
                     if (transaccion.IdPropiedad == null)
                     {
                         <tr class="tr_s">
-                            <td>@transaccion.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td data-order="@transaccion.Fecha.ToString("yyyyMMddHHmmss")">@transaccion.Fecha.ToString("dd/MM/yyyy")</td>
                             <td>@transaccion.Descripcion</td>
                             <td>@transaccion.Documento</td>
                             <td>@transaccion.IdPropiedad</td>
@@ -145,7 +145,7 @@
                 foreach (var transaccion in Model.TransaccionesIndividuales)
                 {
                     <tr class="tr_s">
-                        <td>@transaccion.Fecha</td>
+                        <td data-order="@transaccion.Fecha.ToString("yyyyMMddHHmmss")">@transaccion.Fecha</td>
                         <td>@transaccion.Descripcion</td>
                         <td>@transaccion.Documento</td>
                         <td>@transaccion.IdPropiedad</td>

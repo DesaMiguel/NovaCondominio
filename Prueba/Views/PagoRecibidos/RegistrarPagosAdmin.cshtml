@@ -607,7 +607,7 @@
             $.each(list, function (idex, value) {
                 //var fechita = new Date(value.fecha);
 
-                $(tableId).append("<tr><td>" + value.fecha.slice(0, 10)
+                $(tableId).append("<tr><td data-order='" + value.fecha.slice(0, 10).replace(/-/g, '') + "'>" + value.fecha.slice(0, 10)
                     + "</td><td>" + value.monto.toFixed(2)
                     + "</td><td>" + value.abonado.toFixed(2)
                     + "</td><td>" + value.montoMora.toFixed(2)

@@ -57,7 +57,7 @@
                                             {
                                                 <tr class="tr_s">
                                                     <th>@item.Key.Codigo</th>
-                                                    <td>@recibo.Fecha.ToString("dd/MM/yyyy")</td>
+                                                    <td data-order="@recibo.Fecha.ToString("yyyyMMddHHmmss")">@recibo.Fecha.ToString("dd/MM/yyyy")</td>
                                                     <td>@recibo.Monto.ToString("N") @recibo.SimboloMoneda</td>
                                                     <td>@recibo.Abonado.ToString("N") @recibo.SimboloMoneda</td>
                                                     @* <td>@recibo.IdRgastos</td> *@

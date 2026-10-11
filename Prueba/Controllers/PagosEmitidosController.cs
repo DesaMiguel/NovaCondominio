@@ -123,7 +123,7 @@ namespace Prueba.Controllers
                 return NotFound();
             }
 
-            var pagoEmitido = await _context.PagoEmitidos.FindAsync(id);
+            var pagoEmitido = await _context.PagoEmitidos.FirstOrDefaultAsync(p => p.IdPagoEmitido == id);
             if (pagoEmitido == null)
             {
                 return NotFound();
@@ -526,7 +526,7 @@ namespace Prueba.Controllers
 
         public async Task<IActionResult> PagoProveedorPDF(int id)
         {
-            var pago = await _context.PagoEmitidos.FindAsync(id);
+            var pago = await _context.PagoEmitidos.FirstOrDefaultAsync(p => p.IdPagoEmitido == id);
             if (pago != null)
             {
                 var pagoFactura = await _context.PagoFacturas.Where(c => c.IdPagoEmitido == pago.IdPagoEmitido).ToListAsync();

@@ -114,7 +114,7 @@
                                                         {
                                                             <tr class="tr_s">
                                                                 <td>@asiento.NumAsiento</td>
-                                                                <td class="text-bold-500">@asiento.Fecha.ToString("dd/MM/yyyy")</td>
+                                                                <td class="text-bold-500" data-order="@asiento.Fecha.ToString("yyyyMMddHHmmss")">@asiento.Fecha.ToString("dd/MM/yyyy")</td>
                                                                 <td>@(clase.First().Codigo + grupo.First().Codigo + cuenta.First().Codigo + subcuenta.First().Codigo)</td>
                                                                 <td class="text-bold-500">@subcuenta.First().Descricion</td>
                                                                 <td class="text-bold-500">@asiento.Concepto</td>
