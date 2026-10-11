@@ -223,12 +223,12 @@ namespace Prueba.Repositories
             var lista = (from c in _context.PagoFacturas
                          join p in _context.PagoEmitidos
                          on c.IdPagoEmitido equals p.IdPagoEmitido
-                         where p.IdCondominio == id
+                         where p.IdCondominio == id && p.FechaAnulado == null
                          && p.Fecha >= fecha.Desde && p.Fecha <= fecha.Hasta
                          select p).Include(c => c.IdCondominioNavigation).Distinct();
 
             var referencias = from p in _context.PagoEmitidos
-                              where p.IdCondominio == id
+                              where p.IdCondominio == id && p.FechaAnulado == null
                               && p.Fecha >= fecha.Desde && p.Fecha <= fecha.Hasta
                               join r in _context.ReferenciasPes
                               on p.IdPagoEmitido equals r.IdPagoEmitido

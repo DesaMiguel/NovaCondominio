@@ -13,5 +13,7 @@ public partial class ReferenciasPe
 
     public string Banco { get; set; } = null!;
 
+    public DateTime? FechaAnulado { get; set; }
+
     public virtual PagoEmitido IdPagoEmitidoNavigation { get; set; } = null!;
 }

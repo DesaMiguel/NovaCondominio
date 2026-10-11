@@ -57,11 +57,11 @@ namespace Prueba.Repositories
             var lista = (from c in _context.PagoFacturas
                          join p in _context.PagoEmitidos
                          on c.IdPagoEmitido equals p.IdPagoEmitido
-                         where p.IdCondominio == idCondominio
+                         where p.IdCondominio == idCondominio && p.FechaAnulado == null
                          select p).Include(c => c.IdCondominioNavigation).Distinct(); 
 
             var referencias = from p in _context.PagoEmitidos
-                              where p.IdCondominio == idCondominio
+                              where p.IdCondominio == idCondominio && p.FechaAnulado == null
                               join r in _context.ReferenciasPes
                               on p.IdPagoEmitido equals r.IdPagoEmitido
                               select r;
@@ -82,60 +82,65 @@ namespace Prueba.Repositories
 
             if (pagoEmitido != null)
             {
-                if (pagoEmitido.FormaPago)
-                {
-                    var referencia = await _context.ReferenciasPes.Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido).ToListAsync();
+                var fechaAnulado = DateTime.Now;
+                var referencias = await _context.ReferenciasPes
+                    .Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido)
+                    .ToListAsync();
+                var pagosAnticipo = await _context.PagoAnticipos
+                    .Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido)
+                    .ToListAsync();
+                var pagosNomina = await _context.PagosNominas
+                    .Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido)
+                    .ToListAsync();
+                var pagosNotaDebito = await _context.PagosNotaDebitos
+                    .Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido)
+                    .ToListAsync();
+                var pagosFactura = await _context.PagoFacturas
+                    .Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido)
+                    .ToListAsync();
+                var ordenesPago = await _context.OrdenPagos
+                    .Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido)
+                    .ToListAsync();
 
-                    if (referencia != null && referencia.Any())
+                foreach (var pagoFactura in pagosFactura)
+                {
+                    var factura = await _context.Facturas.FindAsync(pagoFactura.IdFactura);
+                    if (factura != null)
                     {
-                        _context.ReferenciasPes.Remove(referencia.First());
-                    }
-                }
-                _context.PagoEmitidos.Remove(pagoEmitido);
-
-                var pagoAnticipo = await _context.PagoAnticipos.Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido).ToListAsync();
-                var pagoNomina = await _context.PagosNominas.Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido).ToListAsync();
-                var pagoNotaDebito = await _context.PagosNotaDebitos.Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido).ToListAsync();
-                var pagoFactura = await _context.PagoFacturas.Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido).ToListAsync();
-                var ordenPagos = await _context.OrdenPagos.Where(c => c.IdPagoEmitido == pagoEmitido.IdPagoEmitido).ToListAsync();
-
-                if (pagoAnticipo != null)
-                {
-                    _context.PagoAnticipos.RemoveRange(pagoAnticipo);
-                }
-                if (pagoNomina != null)
-                {
-                    _context.PagosNominas.RemoveRange(pagoNomina);
-                }
-                if (pagoNotaDebito != null)
-                {
-                    _context.PagosNotaDebitos.RemoveRange(pagoNotaDebito);
-                }
-                if (pagoNotaDebito != null)
-                {
-                    _context.PagosNotaDebitos.RemoveRange(pagoNotaDebito);
-                }
-                if (ordenPagos != null)
-                {
-                    _context.OrdenPagos.RemoveRange(ordenPagos);
-                }
-                if (pagoFactura != null)
-                {
-                    foreach (var item in pagoFactura)
-                    {
-                        // buscar factura
-                        var factura = await _context.Facturas.FindAsync(item.IdFactura);
-                        // en proceso nuevamente
                         factura.EnProceso = true;
                         factura.Pagada = false;
                         factura.Abonado -= pagoEmitido.Monto;
-                        // restar de abonado el monto del pago
-                        // actualizar factura
-                        _context.Facturas.Update(factura);
                     }
-                    _context.PagoFacturas.RemoveRange(pagoFactura);
+
+                    pagoFactura.FechaAnulado = fechaAnulado;
                 }
 
+                foreach (var referencia in referencias)
+                {
+                    referencia.FechaAnulado = fechaAnulado;
+                }
+
+                foreach (var pagoAnticipo in pagosAnticipo)
+                {
+                    pagoAnticipo.FechaAnulado = fechaAnulado;
+                }
+
+                foreach (var pagoNomina in pagosNomina)
+                {
+                    pagoNomina.FechaAnulado = fechaAnulado;
+                }
+
+                foreach (var pagoNotaDebito in pagosNotaDebito)
+                {
+                    pagoNotaDebito.FechaAnulado = fechaAnulado;
+                }
+
+                foreach (var ordenPago in ordenesPago)
+                {
+                    ordenPago.FechaAnulado = fechaAnulado;
+                }
+
+                pagoEmitido.FechaAnulado = fechaAnulado;
             }
 
             return await _context.SaveChangesAsync();

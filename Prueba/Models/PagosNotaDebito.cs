@@ -11,6 +11,8 @@ public partial class PagosNotaDebito
 
     public int IdNotaDebito { get; set; }
 
+    public DateTime? FechaAnulado { get; set; }
+
     public virtual NotaDebito IdNotaDebitoNavigation { get; set; } = null!;
 
     public virtual PagoEmitido IdPagoEmitidoNavigation { get; set; } = null!;

@@ -288,6 +288,7 @@ namespace Prueba.Repositories
             {
                 var pagosEmitidosMes = _context.PagoEmitidos
                     .Where(c => c.IdCondominio == condominio.IdCondominio
+                    && c.FechaAnulado == null
                     && c.Fecha.Month == mes)
                     .Sum(c => c.Monto);
 
@@ -482,7 +483,7 @@ namespace Prueba.Repositories
                                            join referencia in _context.ReferenciasPes
                                            on pr.IdPagoEmitido equals referencia.IdPagoEmitido
                                            where pr.Fecha >= auxFechaInicio && pr.Fecha <= auxFechaFin
-                                           where cc.IdSubCuenta.ToString() == referencia.Banco && pr.Activo
+                                           where cc.IdSubCuenta.ToString() == referencia.Banco && pr.Activo && pr.FechaAnulado == null
                                            select pr).OrderBy(c => c.Fecha).ToListAsync();
 
                 IList<PagosConciliacionVM> pagos = new List<PagosConciliacionVM>();

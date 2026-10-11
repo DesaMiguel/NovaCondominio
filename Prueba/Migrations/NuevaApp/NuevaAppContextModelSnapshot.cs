@@ -2311,6 +2311,9 @@ namespace Prueba.Migrations.NuevaApp
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime");
 
+                    b.Property<DateTime?>("FechaAnulado")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("IdPagoEmitido")
                         .HasColumnType("int");
 
@@ -2333,6 +2336,9 @@ namespace Prueba.Migrations.NuevaApp
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("FechaAnulado")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdAnticipo")
                         .HasColumnType("int");
@@ -2437,6 +2443,9 @@ namespace Prueba.Migrations.NuevaApp
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("FechaAnulado")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("IdAnticipo")
                         .HasColumnType("int");
@@ -2630,6 +2639,9 @@ namespace Prueba.Migrations.NuevaApp
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("FechaAnulado")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("IdPagoEmitido")
                         .HasColumnType("int");
 
@@ -2652,6 +2664,9 @@ namespace Prueba.Migrations.NuevaApp
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPagosNotaDebito"));
+
+                    b.Property<DateTime?>("FechaAnulado")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdNotaDebito")
                         .HasColumnType("int");
@@ -3280,6 +3295,9 @@ namespace Prueba.Migrations.NuevaApp
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)")
                         .HasColumnName("banco");
+
+                    b.Property<DateTime?>("FechaAnulado")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdPagoEmitido")
                         .HasColumnType("int")

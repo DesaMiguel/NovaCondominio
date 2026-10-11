@@ -13,6 +13,8 @@ public partial class PagoFactura
 
     public int? IdAnticipo { get; set; }
 
+    public DateTime? FechaAnulado { get; set; }
+
     public virtual Anticipo? IdAnticipoNavigation { get; set; }
 
     public virtual Factura IdFacturaNavigation { get; set; } = null!;

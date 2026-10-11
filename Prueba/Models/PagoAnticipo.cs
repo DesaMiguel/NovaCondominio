@@ -11,6 +11,8 @@ public partial class PagoAnticipo
 
     public int Id { get; set; }
 
+    public DateTime? FechaAnulado { get; set; }
+
     public virtual Anticipo IdAnticipoNavigation { get; set; } = null!;
 
     public virtual PagoEmitido IdPagoEmitidoNavigation { get; set; } = null!;

@@ -1334,6 +1334,8 @@ public partial class NuevaAppContext : DbContext
         {
             entity.HasKey(e => e.IdOrdenPago);
 
+            entity.HasQueryFilter(e => e.FechaAnulado == null);
+
             entity.ToTable("OrdenPago");
 
             entity.Property(e => e.Fecha).HasColumnType("datetime");
@@ -1351,6 +1353,8 @@ public partial class NuevaAppContext : DbContext
 
         modelBuilder.Entity<PagoAnticipo>(entity =>
         {
+            entity.HasQueryFilter(e => e.FechaAnulado == null);
+
             entity.ToTable("PagoAnticipo");
 
             entity.HasOne(d => d.IdAnticipoNavigation).WithMany(p => p.PagoAnticipos)
@@ -1412,6 +1416,8 @@ public partial class NuevaAppContext : DbContext
 
         modelBuilder.Entity<PagoFactura>(entity =>
         {
+            entity.HasQueryFilter(e => e.FechaAnulado == null);
+
             entity.ToTable("PagoFactura");
 
             entity.HasOne(d => d.IdAnticipoNavigation).WithMany(p => p.PagoFacturas)
@@ -1527,6 +1533,8 @@ public partial class NuevaAppContext : DbContext
 
         modelBuilder.Entity<PagosNomina>(entity =>
         {
+            entity.HasQueryFilter(e => e.FechaAnulado == null);
+
             entity.ToTable("PagosNomina");
 
             entity.HasOne(d => d.IdPagoEmitidoNavigation).WithMany(p => p.PagosNominas)
@@ -1543,6 +1551,8 @@ public partial class NuevaAppContext : DbContext
         modelBuilder.Entity<PagosNotaDebito>(entity =>
         {
             entity.HasKey(e => e.IdPagosNotaDebito);
+
+            entity.HasQueryFilter(e => e.FechaAnulado == null);
 
             entity.ToTable("PagosNotaDebito");
 
@@ -1869,6 +1879,8 @@ public partial class NuevaAppContext : DbContext
         modelBuilder.Entity<ReferenciasPe>(entity =>
         {
             entity.HasKey(e => e.IdReferencia);
+
+            entity.HasQueryFilter(e => e.FechaAnulado == null);
 
             entity.ToTable("Referencias_PE");
 

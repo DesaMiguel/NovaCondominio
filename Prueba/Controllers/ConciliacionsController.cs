@@ -79,7 +79,7 @@ namespace Prueba.Controllers
                                        join referencia in _context.ReferenciasPes
                                        on pr.IdPagoEmitido equals referencia.IdPagoEmitido
                                        where pr.Fecha >= conciliacion.FechaInicio && pr.Fecha <= conciliacion.FechaFin
-                                       where cc.IdSubCuenta.ToString() == referencia.Banco
+                                       where cc.IdSubCuenta.ToString() == referencia.Banco && pr.FechaAnulado == null
                                        select pr).OrderBy(c => c.Fecha).ToListAsync();
 
             IList<PagosConciliacionVM> pagos = new List<PagosConciliacionVM>();
@@ -902,7 +902,7 @@ namespace Prueba.Controllers
                                            join referencia in _context.ReferenciasPes
                                            on pr.IdPagoEmitido equals referencia.IdPagoEmitido
                                            where pr.Fecha >= conciliacion.FechaInicio && pr.Fecha <= conciliacion.FechaFin
-                                           where cc.IdSubCuenta.ToString() == referencia.Banco
+                                           where cc.IdSubCuenta.ToString() == referencia.Banco && pr.FechaAnulado == null
                                            select pr).OrderBy(c => c.Fecha).ToListAsync();
 
                 IList<PagosConciliacionVM> pagos = new List<PagosConciliacionVM>();

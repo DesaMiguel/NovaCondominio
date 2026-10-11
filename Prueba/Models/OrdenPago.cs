@@ -15,6 +15,8 @@ public partial class OrdenPago
 
     public bool Activo { get; set; }
 
+    public DateTime? FechaAnulado { get; set; }
+
     public virtual PagoEmitido IdPagoEmitidoNavigation { get; set; } = null!;
 
     public virtual Proveedor IdProveedorNavigation { get; set; } = null!;
